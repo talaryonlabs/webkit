@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Areas\MyFeature\Pages\Page1.cshtml" />
+      <UpToDateCheckInput Remove="Components\MyFeature\Pages\Page1.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
