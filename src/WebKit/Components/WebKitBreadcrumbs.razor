@@ -1,0 +1,27 @@
+﻿@code {
+    [Parameter] public List<WebKitBreadcrumbItem> Items { get; set; } = [];
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+}
+
+<div class="breadcrumbs text-sm pb-5 @InputAttributes?.GetValueOrDefault("class", "")" style="@InputAttributes?.GetValueOrDefault("style", "")">
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
+        @foreach (var item in Items)
+        {
+            if (item.Url is { Length: > 0 })
+            {
+                <li>
+                    <a href="@item.Url">@item.Name</a>
+                </li>
+            }
+            else
+            {
+                <li>@item.Name</li>
+            }
+        }
+    </ul>
+</div>

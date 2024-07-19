@@ -21,5 +21,11 @@
       <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Components\WebKitBreadcrumbs.cs">
+        <DependentUpon>WebKitBreadcrumbs.razor</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 
 </Project>

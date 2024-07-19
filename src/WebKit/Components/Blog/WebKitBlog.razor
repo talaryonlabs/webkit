@@ -1,0 +1,97 @@
+﻿@using Talaryon.Toolbox.Services.Directus
+@using Talaryon.WebKit.Services.WebKit
+@using Talaryon.WebKit.Models
+@rendermode InteractiveAuto
+@inject IDirectus Directus
+@inject IWebKit WebKit
+
+@code {
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+    private readonly string[] _fields = ["id", "date_created", "date_scheduled", "title", "slug", "teaser", "image.id"];
+    private readonly List<WebKitBreadcrumbItem> _breadcrumbItems = [];
+    private readonly List<DirectusBlogPost> _posts = new();
+    private readonly int _limit = 9;
+
+    private bool _initialized, _loading, _visible;
+    private DirectusResponse<DirectusBlogPost[]>? _response;
+    private DirectusMeta _meta = new();
+    private int _offset;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _response = await WebKit.GetBlogPosts(_limit, _offset);
+        
+        if (_response is { Data: not null })
+            _posts.AddRange(_response.Data);
+
+        _visible = !(_offset + _limit >= _response.Meta.TotalCount);
+        _breadcrumbItems.Add(new WebKitBreadcrumbItem { Name = "Blog" });
+        _initialized = true;
+    }
+
+    private async Task LoadMore()
+    {
+        _loading = true;
+        _offset += _limit;
+        _response = await WebKit.GetBlogPosts(_limit, _offset);
+
+        if (_response is { Data: not null })
+            _posts.AddRange(_response.Data);
+
+        _loading = false;
+        _visible = !(_offset + _limit >= _response.Meta.TotalCount);
+    }
+
+}
+
+<WebKitMeta Title="@(_meta.Title ?? "Blog")" Description="@_meta.Description" Image="@_meta.Image?.Id"/>
+<WebKitContent IsLoading="!_initialized">
+    <WebKitBreadcrumbs Items="_breadcrumbItems"/>
+
+    <div class="text-2xl lg:text-4xl pb-5">@(_meta.Title ?? "Blog")</div>
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
+        @foreach (var post in _posts)
+        {
+            <div class="card card-compact bg-base-100 shadow-xl">
+
+                <figure>
+                    <a href="/blog/@post.Id/@post.Slug">
+                        <img src="@Directus.GetAssetUrl(post.Image.Id)" alt="@post.Image.Id">
+                    </a>
+                </figure>
+
+                <div class="card-body">
+                    <h2 class="card-title">
+                        @post.Title
+                        <div class="badge badge-secondary">@post.DateScheduled.ToString("dd.MM.yy")</div>
+                    </h2>
+
+                    <p>
+                        @post.Teaser
+                    </p>
+                    <div class="card-actions justify-end">
+                        <a class="btn btn-secondary" href="/blog/@post.Id/@post.Slug">Weiterlesen</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center pt-10">
+        @if (!_loading)
+        {
+            @if (_visible)
+            {
+                <button class="btn btn-primary" @onclick="LoadMore">Mehr Laden</button>
+            }
+        }
+        else
+        {
+            <span class="loading loading-ring loading-lg"></span>
+        }
+    </div>
+
+</WebKitContent>
