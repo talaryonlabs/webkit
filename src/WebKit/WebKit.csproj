@@ -5,10 +5,20 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+        <RootNamespace>Talaryon.WebKit</RootNamespace>
+        <AssemblyName>Talaryon.WebKit</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Areas\MyFeature\Pages\Page1.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" />
     </ItemGroup>
 
 

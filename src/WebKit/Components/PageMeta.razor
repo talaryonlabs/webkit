@@ -1,0 +1,63 @@
+@using Talaryon.Toolbox.Services.Directus
+@inject IDirectus Directus
+@code {
+    
+    // Disable warning for "should be auto property"
+#pragma warning disable BL0007
+    
+    [Parameter]
+    public string? Title
+    {
+        get => _title;
+        set => _title = value ?? _title;
+    }
+
+    [Parameter]
+    public string? Description
+    {
+        get => _description;
+        set => _description = value ?? _description;
+    }
+
+    [Parameter]
+    public string? Type
+    {
+        get => _type;
+        set => _type = value ?? _type;
+    }
+
+    [Parameter]
+    public string? Image
+    {
+        get => _image;
+        set => _image = value ?? _image;
+    }
+    
+#pragma warning restore BL0007
+
+    private string _title = "Medsult";
+    private string _applicatioName = "Medsult";
+    private string _description = "Optimizing Care, Maximizing Impact.";
+    private string _type = "website";
+    private string _image = "3b44176d-d641-44a6-9f4a-89ff7678f648";
+}
+<PageTitle>@_title</PageTitle>
+<HeadContent>
+    <title>@_title</title>
+    
+    <meta name="description" content="@_description"/>
+
+    <meta property="og:type" content="@_type"/>
+    <meta property="og:title" content="@_title"/>
+    <meta property="og:description" content="@_description"/>
+    <meta property="og:image" content="@Directus.GetAssetUrl(_image)"/>
+    <meta property="og:site_name" content="@_applicatioName"/>
+    @*<meta property="og:url" content="{{ context.location.url }}" />*@
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@@talaryonlabs">
+    <meta name="twitter:title" content="@_title">
+    <meta name="twitter:description" content="@_description">
+    <meta name="twitter:image" content="@Directus.GetAssetUrl(_image)">
+    <meta name="twitter:image:src" content="@Directus.GetAssetUrl(_image)">
+</HeadContent>
