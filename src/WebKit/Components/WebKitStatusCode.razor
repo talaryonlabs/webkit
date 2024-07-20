@@ -1,0 +1,52 @@
+@using Microsoft.AspNetCore.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Talaryon.Toolbox.Extensions
+@using Talaryon.WebKit.Services.WebKit
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IWebKit WebKit
+@code {
+    
+    [Parameter]
+    public string? Code { get; set; }
+    
+    [Parameter]
+    public string? Url { get; set; }
+    
+    private IStatusCodeReExecuteFeature? _statusCodeReExecuteFeature;
+    
+    protected override void OnInitialized()
+    {
+        _statusCodeReExecuteFeature = HttpContextAccessor.HttpContext?.Features.Get<IStatusCodeReExecuteFeature>();
+    }
+}
+
+<div class="mockup-code text-lg">
+    @switch (Code)
+    {
+        case "404":
+            <pre data-prefix=">" class="text-accent">Looking for @(_statusCodeReExecuteFeature?.OriginalPath ?? Url?.FromBase64String()) ...</pre>
+            <pre data-prefix=">" class="text-accent">...</pre>
+            <pre data-prefix=">" class="text-warning">Wait? What? I can't find anything at this path ...</pre>
+            <pre data-prefix=">" class="text-warning">I got the following error:</pre>
+            <pre data-prefix=">" class="text-error"><b>404 Not Found.</b></pre>
+            <pre data-prefix=">" class="text-accent">I'm sorry, but I'm not able to deliver you the requested page.</pre>
+            <pre data-prefix=">" class="text-accent">Maybe you want to start at <a href="/" class="link link-hover">@WebKit.Default.ApplicationUrl</a>?</pre>
+            break;
+        case "403":
+            <pre data-prefix=">" class="text-accent">Trying to access the following resource ...</pre>
+            <pre data-prefix=">" class="text-accent">...</pre>
+            <pre data-prefix=">" class="text-warning">Hmm. Looks like you are not allowed to access the requested resource.</pre>
+            <pre data-prefix=">" class="text-warning">I got the following error:</pre>
+            <pre data-prefix=">" class="text-error"><b>403 Forbidden.</b></pre>
+            <pre data-prefix=">" class="text-accent">I'm sorry, but I'm not able to deliver you the requested resource.</pre>
+            <pre data-prefix=">" class="text-accent">Maybe you want to start at <a href="@WebKit.Default.ApplicationUrl" class="link link-hover">@WebKit.Default.ApplicationUrl</a>?</pre>
+            break;
+        default:
+            <pre data-prefix=">" class="text-warning">Oh!?</pre>
+            <pre data-prefix=">" class="text-warning">Don't know what happened to me ...</pre>
+            <pre data-prefix=">" class="text-error">I got the following error code: @Code</pre>
+            <pre data-prefix=">" class="text-accent">Want to try something new?</pre>
+            <pre data-prefix=">" class="text-accent">Maybe you want to travel to <a href="@WebKit.Default.ApplicationUrl" class="link link-hover">@WebKit.Default.ApplicationUrl</a>?</pre>
+            break;
+    }
+</div>

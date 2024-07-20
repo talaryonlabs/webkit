@@ -1,0 +1,37 @@
+@using Talaryon.Toolbox.Services.Directus
+@using Talaryon.WebKit.Models
+@using Talaryon.WebKit.Services.WebKit
+@inject IWebKit WebKit
+@inject IDirectus Directus
+@rendermode InteractiveServer
+@code {
+
+    private DirectusFooter _model = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await WebKit.GetFooter() ?? new();
+    }
+}
+
+<footer class="footer footer-center p-10 bg-secondary text-primary-content">
+    <nav class="flex flex-wrap gap-4">
+        @foreach (var item in _model.Links)
+        {
+            <a class="link link-hover" href="@item.Url">@item.Name</a>
+        }
+    </nav>
+    <nav class="md:place-self-center md:justify-self-center">
+        <div class="grid grid-flow-col gap-4">
+            @foreach (var item in _model.Socials)
+            {
+                <a href="@item.Url" target="_blank">
+                    <img class="footer-social-icon rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id)" alt="@item.Name"/>
+                </a>
+            }
+        </div>
+    </nav>
+    <aside>
+        <p>Copyright © @DateTime.Now.Year - @_model.CopyrightText</p>
+    </aside>
+</footer>

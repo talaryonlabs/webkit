@@ -1,0 +1,105 @@
+﻿@using Talaryon.Toolbox.Services.Directus
+@using Talaryon.WebKit.Models
+@using Talaryon.WebKit.Services.WebKit
+@inject NavigationManager NavigationManager
+@inject IWebKit WebKit
+@inject IDirectus Directus
+@rendermode InteractiveServer
+
+@code {
+
+    [Parameter] public bool SmallOnly { get; set; }
+
+    private DirectusNavBar _model = new();
+
+    private string GenerateStyleClasses(string url, bool isLastItem)
+    {
+        var list = new List<string>(["navbar-item", "duration-500", "uppercase"]);
+        if (isLastItem)
+            list.Add("navbar-item-end");
+        if (url == NavigationManager.Uri.Replace(NavigationManager.BaseUri, "/"))
+            list.Add("navbar-item-active");
+
+        return string.Join(" ", list);
+    }
+
+    private string GenerateMenuStyleClasses(string url)
+    {
+        var list = new List<string>(["uppercase"]);
+        if (url == NavigationManager.Uri.Replace(NavigationManager.BaseUri, "/"))
+            list.Add("navbar-menu-active-item");
+
+        return string.Join(" ", list);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await WebKit.GetNavBar() ?? new();
+    }
+
+}
+
+@if (SmallOnly)
+{
+    <nav class="absolute top-0 left-0 translate-x-5 translate-y-5">
+        <div class="dropdown">
+            <div tabindex="0" role="button" class="btn btn-outline btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                </svg>
+            </div>
+            <ul tabindex="0" class="menu dropdown-content mt-1 z-[1] rounded-btn bg-white bg-opacity-50 navbar-menu border-white gap-2">
+                @foreach (var item in _model.Links)
+                {
+                <li class="@GenerateMenuStyleClasses(item.Url)">
+                    <a href="@item.Url" class="duration-500">@item.Name</a>
+                </li>
+                }
+                <li class="@GenerateMenuStyleClasses("/contact")">
+                    <a href="contact" class="duration-500">Kontakt</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+}
+else
+{
+    <nav class="fixed w-full top-0 left-0 z-50">
+        <div class="bg-secondary text-primary-content">
+            <div class="container mx-auto">
+                <div class="navbar pt-0 pb-0">
+                    <div class="navbar-start">
+                        <div class="dropdown">
+                            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                                </svg>
+                            </div>
+                            <ul tabindex="0" class="menu dropdown-content mt-6 z-[1] shadow rounded-btn bg-primary navbar-menu">
+                                @foreach (var item in _model.Links)
+                                {
+                                    <li class="@GenerateMenuStyleClasses(item.Url)">
+                                        <a href="@item.Url" class="duration-500">@item.Name</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <a href="/" class="navbar-brand pr-5">
+                            <img src="@Directus.GetAssetUrl(_model.Logo.Id)" alt="@_model.Title"/>
+                        </a>
+                    </div>
+                    <div class="navbar-center hidden lg:flex">
+                        @foreach (var item in _model.Links)
+                        {
+                            <a class="@GenerateStyleClasses(item.Url, item == _model.Links.Last())" href="@item.Url">@item.Name</a>
+                        }
+                    </div>
+                    <div class="navbar-end">
+                        <a class="btn btn-accent btn-outline" href="/contact">Kontakt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+}
