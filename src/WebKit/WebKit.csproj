@@ -12,20 +12,10 @@
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
-
+    
     <ItemGroup>
-      <UpToDateCheckInput Remove="Areas\MyFeature\Pages\Page1.cshtml" />
-      <UpToDateCheckInput Remove="Components\MyFeature\Pages\Page1.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Components\WebKitBreadcrumbs.cs">
-        <DependentUpon>WebKitBreadcrumbs.razor</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" />
+      <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
+      <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\Toolbox\src\Toolbox\Toolbox.csproj')" />
     </ItemGroup>
 
 
