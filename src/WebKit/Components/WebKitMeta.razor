@@ -3,30 +3,26 @@
 @inject IDirectus Directus
 @inject IWebKit WebKit
 @rendermode InteractiveServer
-@code {
-    
-    [Parameter]
-    public string? Title { get; set; }
-    
-    [Parameter]
-    public string? Description { get; set; }
 
-    [Parameter]
-    public string? Image { get; set; }
+@code {
+
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? Description { get; set; }
+
+    [Parameter] public string? Image { get; set; }
 }
+
 <PageTitle>@(Title ?? WebKit.Default.DefaultPageTitle)</PageTitle>
 <HeadContent>
     <title>@(Title ?? WebKit.Default.DefaultPageTitle)</title>
-    
+
     <meta name="description" content="@(Description ?? WebKit.Default.DefaultPageDescription)"/>
 
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="@(Title ?? WebKit.Default.DefaultPageTitle)"/>
     <meta property="og:description" content="@(Description ?? WebKit.Default.DefaultPageDescription)"/>
-    @if (Image?.Length > 0)
-    {
-        <meta property="og:image" content="@Directus.GetAssetUrl(Image)"/>
-    }
+    <meta property="og:image" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)"/>
     <meta property="og:site_name" content="@WebKit.Default.ApplicationName"/>
 
     <meta name="twitter:card" content="summary_large_image">
@@ -36,9 +32,6 @@
     }
     <meta name="twitter:title" content="@(Title ?? WebKit.Default.DefaultPageTitle)">
     <meta name="twitter:description" content="@(Description ?? WebKit.Default.DefaultPageDescription)">
-    @if (Image?.Length > 0)
-    {
-        <meta name="twitter:image" content="@Directus.GetAssetUrl(Image)">
-        <meta name="twitter:image:src" content="@Directus.GetAssetUrl(Image)">
-    }
+    <meta name="twitter:image" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)">
+    <meta name="twitter:image:src" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)">
 </HeadContent>
