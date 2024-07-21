@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Talaryon.WebKit.Models;
 
-public class DirectusBlogPost
+public class DirectusBlogPost : IDirectusModel
 {
     public int Id { get; set; }
     [JsonPropertyName("date_scheduled")] public DateTime DateScheduled { get; set; }
@@ -14,6 +14,13 @@ public class DirectusBlogPost
     public string? Teaser { get; set; }
     public string? Content { get; set; }
     public DirectusBlogPostImage[] Gallery { get; set; } = [];
+    
+    public string GetTable() => "blog";
+    public string[] GetFields() =>
+    [
+        "id", "date_scheduled", "title", "slug", "teaser", "content", "image.id", "user_created.first_name",
+        "user_created.username", "user_created.avatar.id"
+    ];
 }
 
 public class DirectusBlogPostImage

@@ -6,5 +6,7 @@ public class DirectusMeta : IDirectusModel
     public string? Title { get; set; }
     public string? Description { get; set; }
     public DirectusFile? Image { get; set; }
+    public virtual string GetTable() => "meta";
+
     public string[] GetFields() => ["*.*"];
 }

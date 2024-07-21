@@ -9,5 +9,7 @@ public class DirectusPage : IDirectusModel
 
     public string? Title { get; set; }
     public string? Content { get; set; }
-    public string[] GetFields() => ["id", "date_created", "date_updated", "title", "content"];
+
+    public virtual string GetTable() => "pages";
+    public virtual string[] GetFields() => ["id", "date_created", "date_updated", "title", "content"];
 }

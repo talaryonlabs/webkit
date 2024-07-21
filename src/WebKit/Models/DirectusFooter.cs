@@ -9,7 +9,8 @@ public class DirectusFooter : IDirectusModel
     public DirectusFooterSocial[] Socials { get; set; } = [];
     public string? CopyrightText { get; set; }
 
-    public string[] GetFields() =>
+    public virtual string GetTable() => "footer";
+    public virtual string[] GetFields() =>
     [
         "copyrightText", "socials", "socials.sort", "socials.name", "socials.url", "socials.image.id", "links", "links.sort",
         "links.name", "links.url"

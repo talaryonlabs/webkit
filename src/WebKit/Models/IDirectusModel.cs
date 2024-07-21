@@ -2,5 +2,6 @@
 
 public interface IDirectusModel
 {
+    string GetTable();
     string[] GetFields();
 }

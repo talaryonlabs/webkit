@@ -8,5 +8,6 @@ public class DirectusUser : IDirectusModel
     public DirectusFile Avatar { get; set; }
     public string Username { get; set; }
     // public string Bio { get; set; }
-    public string[] GetFields() => ["first_name", "avatar", "avatar.id"];
+    public string GetTable() => "directus_users";
+    public virtual string[] GetFields() => ["first_name", "avatar", "avatar.id"];
 }
