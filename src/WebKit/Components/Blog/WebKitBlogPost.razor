@@ -7,16 +7,17 @@
 @code {
     [Parameter]
     public string Id { get; set; }
-
-    private readonly string[] _fields = ["id", "date_scheduled", "title", "slug", "teaser", "content", "image.id", "user_created.first_name", "user_created.username", "user_created.avatar.id"];
+    
     private readonly List<WebKitBreadcrumbItem> _breadcrumbItems = [];
     
-    private DirectusBlogPost? _model = new();
+    private DirectusBlogPost _model = new();
     private bool _initialized;
     
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        _model = await WebKit.GetBlogPost(Id);
+        _initialized = false;
+        _breadcrumbItems.Clear();
+        _model = await WebKit.GetBlogPost(Id) ?? _model;
         
         _breadcrumbItems.AddRange(new List<WebKitBreadcrumbItem>
         {

@@ -10,7 +10,6 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
 
-    private readonly string[] _fields = ["id", "date_created", "date_scheduled", "title", "slug", "teaser", "image.id"];
     private readonly List<WebKitBreadcrumbItem> _breadcrumbItems = [];
     private readonly List<DirectusBlogPost> _posts = new();
     private readonly int _limit = 9;
