@@ -1,0 +1,52 @@
+﻿@using Talaryon.Toolbox.Services.Directus
+@inject IDirectus Directus
+
+@code {
+
+    [Parameter] public IEnumerable<WebKitGridViewItem> Items { get; set; } = [];
+
+    [Parameter] public string ButtonText { get; set; } = "Read more";
+    [Parameter] public bool ShadowEnabled { get; set; } = true;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+}
+
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 @InputAttributes?.GetValueOrDefault("class", "")" style="@InputAttributes?.GetValueOrDefault("style", "")">
+    @foreach (var item in Items)
+    {
+        <div class="card card-compact bg-base-100 shadow-xl @InputAttributes?.GetValueOrDefault("item:class", "")" style="@InputAttributes?.GetValueOrDefault("item:style", "")">
+
+            <figure>
+                @if (item.Url?.Length > 0)
+                {
+                    <a href="@item.Url">
+                        <img src="@Directus.GetAssetUrl(item.Image.Id)" alt="@item.Image.Title">
+                    </a>
+                }
+                else
+                {
+                    <img src="@Directus.GetAssetUrl(item.Image.Id)" alt="@item.Image.Title">
+                }
+            </figure>
+
+            <div class="card-body">
+                <h2 class="card-title">
+                    @item.Title
+                    <div class="badge badge-secondary">@item.Subtitle</div>
+                </h2>
+
+                <p>
+                    @item.Text
+                </p>
+                <div class="card-actions justify-end">
+                    @if (item.Url?.Length > 0)
+                    {
+                        <a class="btn btn-secondary" href="@item.Url">@ButtonText</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

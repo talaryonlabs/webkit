@@ -17,6 +17,15 @@
       <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
       <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\Toolbox\src\Toolbox\Toolbox.csproj')" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Components\WebKitGridViewItem.cs">
+        <DependentUpon>WebKitGridView.razor</DependentUpon>
+      </Compile>
+      <Compile Update="Components\WebKitBreadcrumbItem.cs">
+        <DependentUpon>WebKitBreadcrumbs.razor</DependentUpon>
+      </Compile>
+    </ItemGroup>
 
 
 </Project>
