@@ -25,6 +25,9 @@
       <Compile Update="Components\WebKitBreadcrumbItem.cs">
         <DependentUpon>WebKitBreadcrumbs.razor</DependentUpon>
       </Compile>
+      <Compile Update="Components\IWebKitGalleryItem.cs">
+        <DependentUpon>WebKitGallery.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 

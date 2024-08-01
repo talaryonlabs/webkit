@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Talaryon.Toolbox.Services.Directus
+@inject IDirectus Directus
+
+@code {
+
+    [Parameter] public IEnumerable<IWebKitGalleryItem> Items { get; set; } = [];
+    [Parameter] public string ButtonText { get; set; } = "Read more";
+
+    private readonly QueryString _thumbnailQuery = QueryString.Create(new KeyValuePair<string, string>[]
+    {
+        new("width", "500"),
+        new("quality", "100"),
+        new("withoutEnlargement", "1")
+    }!);
+
+    private readonly QueryString _imageQuery = QueryString.Create(new KeyValuePair<string, string>[]
+    {
+        new("width", "2048"),
+        new("quality", "100"),
+        new("withoutEnlargement", "1")
+    }!);
+
+    private string GetClickActions(string? id)
+    {
+        var src = Directus.GetAssetUrl(id, _imageQuery);
+        return string.Join("; ", [
+            $"id = '{id}'",
+            $"loading = (src != '{src}')",
+            $"src = '{src}'",
+            "webKitGalleryViewer.showModal()"
+        ]);
+    }
+
+}
+
+<div x-data="{ id: null, src: null, loading: false }">
+    <div class="grid grid-cols-1 gap-8 md:hidden">
+        @foreach (var item in Items.OrderBy(image => image.Sort))
+        {
+            <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+        }
+    </div>
+    <div class="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach (var item in Items.OrderBy(image => image.Sort))
+        {
+            <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
+                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
+            </a>
+        }
+    </div>
+
+    <dialog id="webKitGalleryViewer" class="modal">
+        <div class="modal-box w-11/12 max-w-screen-2xl">
+            <img x-bind:src="src" x-bind:alt="id" x-on:load="loading = false" x-show="!loading"/>
+            <div class="grid place-content-center" x-show="loading">
+                <div>
+                    <span class="loading loading-ring loading-lg"></span>
+                </div>
+            </div>
+            <div class="modal-action">
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+</div>
