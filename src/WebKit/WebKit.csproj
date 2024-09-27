@@ -28,6 +28,12 @@
       <Compile Update="Components\IWebKitGalleryItem.cs">
         <DependentUpon>WebKitGallery.razor</DependentUpon>
       </Compile>
+      <Compile Update="Components\WebKitPriceViewItem.cs">
+        <DependentUpon>WebKitPriceView.razor</DependentUpon>
+      </Compile>
+      <Compile Update="Components\WebKitPriceViewLabels.cs">
+        <DependentUpon>WebKitPriceView.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 

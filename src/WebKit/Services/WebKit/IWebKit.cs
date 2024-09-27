@@ -1,4 +1,5 @@
-﻿using Talaryon.Toolbox.Services.Directus;
+﻿using Microsoft.AspNetCore.Http;
+using Talaryon.Toolbox.Services.Directus;
 using Talaryon.WebKit.Models;
 
 namespace Talaryon.WebKit.Services.WebKit;
@@ -7,6 +8,9 @@ public interface IWebKit
 {
     WebKitOptions Default { get; }
 
+    string GetAssetUrl(string assetId);
+    string GetAssetUrl(string assetId, QueryString queryString);
+    
     ValueTask<T?> Single<T>() where T : IDirectusModel;
     ValueTask<T?> Select<T>(string id) where T : IDirectusModel;
     ValueTask<DirectusResponse<T[]>?> Many<T>(int limit, int offset, string[] sort) where T : IDirectusModel;

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Talaryon.Toolbox;
 using Talaryon.Toolbox.Services.Directus;
 using Talaryon.WebKit.Models;
@@ -12,6 +14,7 @@ public sealed class WebKitOptions : TalaryonOptions<WebKitOptions>
     public string? DefaultMetaImage { get; set; }
     public string? DefaultPageTitle { get; set; }
     public string? DefaultPageDescription { get; set; }
+    public CultureInfo DefaultCultureInfo { get; set; } = new("de-DE");
     public string? TwitterAccount { get; set; }
     public WebKitComponentTypes ComponentOverrides { get; } = new();
 }
@@ -35,6 +38,9 @@ public class WebKit : IWebKit
     }
 
     public WebKitOptions Default { get; }
+
+    public string GetAssetUrl(string assetId) => _directus.GetAssetUrl(assetId);
+    public string GetAssetUrl(string assetId, QueryString queryString) => _directus.GetAssetUrl(assetId, queryString);
 
     public async ValueTask<T?> Single<T>() where T : IDirectusModel
     {
