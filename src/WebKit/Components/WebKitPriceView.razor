@@ -5,14 +5,7 @@
 @code {
     [Parameter] public IEnumerable<WebKitPriceViewItem> Items { get; set; } = [];
 
-    [Parameter]
-    public WebKitPriceViewLabels Labels { get; set; } = new()
-    {
-        PricingLabel = "Paketpreis",
-        VATLabel = "exkl. MwSt.",
-        IncludingLabel = "im Paketpreis enthalten",
-        ExcludingLabel = "nicht im Paketpreis enthalten"
-    };
+    [Parameter] public WebKitPriceViewLabels Labels { get; set; } = new();
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
@@ -97,7 +90,7 @@
                             <div class="text-xl">@_currencySymbol</div>
                             <div class="text-3xl">@item.Price.ToString("C", _cultureInfo)</div>
                         </div>
-                        <div class="italic">@Labels.VATLabel</div>
+                        <div class="italic">@Labels.TaxLabel</div>
                     </div>
                 </div>
             </div>
