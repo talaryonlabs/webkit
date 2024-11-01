@@ -53,7 +53,7 @@ public class WebKit : IWebKit
         return result != null ? result.Data ?? default : default;
     }
 
-    public async ValueTask<T?> Select<T>(string id) where T : IDirectusModel
+    public async ValueTask<T?> Select<T>(string? id) where T : IDirectusModel
     {
         var item = Activator.CreateInstance<T>();
         var result = await _directus
@@ -80,7 +80,7 @@ public class WebKit : IWebKit
         return result ?? default;
     }
 
-    public ValueTask<DirectusBlogPost?> GetBlogPost(string id) => Select<DirectusBlogPost>(id);
+    public ValueTask<DirectusBlogPost?> GetBlogPost(string? id) => Select<DirectusBlogPost>(id);
 
     public Task<DirectusResponse<DirectusBlogPost[]>?> GetBlogPosts(int limit = 9, int offset = 0)
     {
