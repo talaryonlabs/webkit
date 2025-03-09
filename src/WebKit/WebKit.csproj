@@ -15,7 +15,6 @@
     
     <ItemGroup>
         <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
-        <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\Toolbox\src\Toolbox\Toolbox.csproj')" />
     </ItemGroup>
     
     <ItemGroup>

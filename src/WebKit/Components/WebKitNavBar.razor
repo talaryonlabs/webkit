@@ -44,26 +44,26 @@
 
 @if (SmallOnly)
 {
-    <nav class="absolute top-0 left-0 translate-x-5 translate-y-5">
+    <div class="absolute top-0 left-0 translate-x-5 translate-y-5">
         <div class="dropdown">
             <div tabindex="0" role="button" class="btn btn-outline btn-primary @InputAttributes?.GetValueOrDefault("btn:class", "")">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
                 </svg>
             </div>
-            <ul tabindex="0" class="menu dropdown-content mt-1 z-[1] rounded-btn bg-white bg-opacity-50 navbar-menu border-white gap-2">
+            <ul tabindex="0" class="menu dropdown-content mt-1 z-1 rounded-box bg-white bg-opacity-50 navbar-menu border-white gap-2">
                 @foreach (var item in _model.Links)
                 {
-                <li class="@GenerateMenuStyleClasses(item.Url)">
-                    <a href="@item.Url" class="duration-500">@item.Name</a>
-                </li>
+                    <li class="@GenerateMenuStyleClasses(item.Url)">
+                        <a href="@item.Url" class="duration-500">@item.Name</a>
+                    </li>
                 }
                 <li class="@GenerateMenuStyleClasses("/contact")">
                     <a href="contact" class="duration-500">Kontakt</a>
                 </li>
             </ul>
         </div>
-    </nav>
+    </div>
 }
 else
 {
