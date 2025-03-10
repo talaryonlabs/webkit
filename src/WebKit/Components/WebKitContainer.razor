@@ -1,0 +1,13 @@
+﻿@code {
+    [Parameter] public bool IsLoading { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+}
+<div class="@@container mx-auto pt-10 pb-10 px-5 xl:px-0 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
+    <div class="max-w-xl 2xl:max-w-5xl mx-auto">
+        @ChildContent    
+    </div>
+</div>

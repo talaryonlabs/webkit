@@ -1,43 +1,27 @@
-﻿using System.Globalization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Talaryon.Toolbox;
 using Talaryon.Toolbox.Services.Directus;
 using Talaryon.WebKit.Models;
 
 namespace Talaryon.WebKit.Services.WebKit;
 
-public sealed class WebKitOptions : TalaryonOptions<WebKitOptions>
-{
-    public string? ApplicationName { get; set; }
-    public string? ApplicationUrl { get; set; }
-    public string? DefaultMetaImage { get; set; }
-    public string? DefaultPageTitle { get; set; }
-    public string? DefaultPageDescription { get; set; }
-    public CultureInfo DefaultCultureInfo { get; set; } = new("de-DE");
-    public string? TwitterAccount { get; set; }
-    public WebKitComponentTypes ComponentOverrides { get; } = new();
-}
-
-public sealed class WebKitComponentTypes
-{
-    public Type? Footer { get; set; }
-    public Type? NavBar { get; set; }
-}
-
 public class WebKit : IWebKit
 {
     private readonly IDirectus _directus;
-
+    private readonly WebKitComponentCollection _components;
+    
     public WebKit(IDirectus directus, IOptions<WebKitOptions> optionsAccessor)
     {
         _directus = directus;
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
         Default = optionsAccessor.Value;
+        _components = optionsAccessor.Value.Components;
     }
 
     public WebKitOptions Default { get; }
+
+    public Type? GetComponent<TBase>() where TBase : IWebKitComponent => _components.GetComponent<TBase>();
 
     public string GetAssetUrl(string assetId) => _directus.GetAssetUrl(assetId);
     public string GetAssetUrl(string assetId, QueryString queryString) => _directus.GetAssetUrl(assetId, queryString);

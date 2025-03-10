@@ -7,7 +7,9 @@ namespace Talaryon.WebKit.Services.WebKit;
 public interface IWebKit
 {
     WebKitOptions Default { get; }
-
+    
+    Type? GetComponent<TBase>() where TBase : IWebKitComponent;
+    
     string GetAssetUrl(string assetId);
     string GetAssetUrl(string assetId, QueryString queryString);
     
@@ -25,4 +27,6 @@ public interface IWebKit
     ValueTask<DirectusNavBar?> GetNavBar() => Single<DirectusNavBar>();
 
     ValueTask<DirectusFooter?> GetFooter() => Single<DirectusFooter>();
+    
+
 }
