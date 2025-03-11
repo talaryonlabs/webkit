@@ -1,0 +1,33 @@
+﻿@using Talaryon.WebKit.Services.WebKit
+@inject IWebKit WebKit;
+@code {
+    [Parameter] public string? BackgroundAssetId { get; set; }
+    [Parameter] public string? BackgroundUrl { get; set; }
+    
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+    private string? _url;
+    private string? _background;
+    
+    protected override void OnParametersSet()
+    {
+        if (BackgroundAssetId is not null)
+            _url = WebKit.GetAssetUrl(BackgroundAssetId);
+        
+        if(BackgroundUrl is not null)
+            _url = BackgroundUrl;
+
+        if (_url is not null)
+            _background = $"background:url({_url})";
+    }
+
+}
+<div class="hero min-h-[50vh] max-h-[60vh] @InputAttributes?.GetValueOrDefault("class", "")" style="@_background @InputAttributes?.GetValueOrDefault("style", "")">
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-neutral-content text-center z-[1]">
+        @ChildContent
+    </div>
+</div>

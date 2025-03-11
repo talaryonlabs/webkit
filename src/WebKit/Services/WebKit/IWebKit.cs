@@ -10,7 +10,7 @@ public interface IWebKit
     
     Type? GetComponent<TBase>() where TBase : IWebKitComponent;
     
-    string GetAssetUrl(string assetId);
+    string? GetAssetUrl(string assetId);
     string GetAssetUrl(string assetId, QueryString queryString);
     
     ValueTask<T?> Single<T>() where T : IDirectusModel;

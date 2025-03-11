@@ -23,7 +23,7 @@ public class WebKit : IWebKit
 
     public Type? GetComponent<TBase>() where TBase : IWebKitComponent => _components.GetComponent<TBase>();
 
-    public string GetAssetUrl(string assetId) => _directus.GetAssetUrl(assetId);
+    public string? GetAssetUrl(string assetId) => _directus.GetAssetUrl(assetId);
     public string GetAssetUrl(string assetId, QueryString queryString) => _directus.GetAssetUrl(assetId, queryString);
 
     public async ValueTask<T?> Single<T>() where T : IDirectusModel
