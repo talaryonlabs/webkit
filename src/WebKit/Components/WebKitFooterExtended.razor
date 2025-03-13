@@ -18,6 +18,8 @@
             _model = await WebKit.GetFooter() ?? new DirectusFooter();
     }
 
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
 }
 
 

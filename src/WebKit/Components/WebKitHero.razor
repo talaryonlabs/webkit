@@ -21,11 +21,11 @@
             _url = BackgroundUrl;
 
         if (_url is not null)
-            _background = $"background:url({_url})";
+            _background = $"background:url({_url}); background-repeat: no-repeat; background-size: cover; background-position: center;";
     }
 
 }
-<div class="hero min-h-[50vh] max-h-[60vh] @InputAttributes?.GetValueOrDefault("class", "")" style="@_background @InputAttributes?.GetValueOrDefault("style", "")">
+<div class="hero min-h-[50vh] max-h-[60vh] @InputAttributes?.GetValueOrDefault("class", "")" style="@_background; @InputAttributes?.GetValueOrDefault("style", "")">
     <div class="hero-overlay"></div>
     <div class="hero-content text-neutral-content text-center z-[1]">
         @ChildContent

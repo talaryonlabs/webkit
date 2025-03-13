@@ -1,12 +1,13 @@
 ﻿@using Talaryon.WebKit.Services.WebKit
-@inherits WebKitComponentBase<WebKitSimpleFooter>
+@inherits WebKitComponentBase<WebKitSimpleNavbar>
 
 @code {
-    private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
+    
+    [Parameter] public Type? OverrideType { get; set; }
     [Parameter] public override RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
-
     
+    private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
     
     protected override void OnParametersSet()
     {
@@ -17,7 +18,7 @@
 }
 @inject IWebKit WebKit
 
-@if ((Component = WebKit.GetComponent<IWebKitFooter>() ?? Component) is not null)
+@if ((Component = OverrideType ?? WebKit.GetComponent<IWebKitNavbar>() ?? Component) is not null)
 {
     <DynamicComponent Type="@Component" Parameters="@_parameters" />
 }

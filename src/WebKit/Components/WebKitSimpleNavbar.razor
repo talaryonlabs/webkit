@@ -1,0 +1,66 @@
+﻿@using Talaryon.WebKit.Models
+@using Talaryon.WebKit.Services.WebKit
+@implements IWebKitNavbar
+
+@inject IWebKit WebKit
+@inject NavigationManager NavigationManager
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
+    
+    private DirectusNavBar _model = new();
+
+    private string GenerateStyleClasses(string url, bool isLastItem)
+    {
+        var list = new List<string>(["navbar-item", "duration-500", "uppercase"]);
+        if (isLastItem)
+            list.Add("navbar-item-end");
+        if (url == NavigationManager.Uri.Replace(NavigationManager.BaseUri, "/"))
+            list.Add("navbar-item-active");
+
+        return string.Join(" ", list);
+    }
+
+    private string GenerateMenuStyleClasses(string url)
+    {
+        var list = new List<string>(["uppercase"]);
+        if (url == NavigationManager.Uri.Replace(NavigationManager.BaseUri, "/"))
+            list.Add("navbar-menu-active-item");
+
+        return string.Join(" ", list);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _model = await WebKit.GetNavBar() ?? new();
+        NavigationManager.LocationChanged += (o,e) => StateHasChanged();
+    }
+}
+
+<div class="fixed top-0 left-0 translate-x-5 translate-y-5 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
+    <div class="dropdown">
+        <button class="btn btn-square btn-primary btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
+        </button>
+        <ul
+            tabindex="0"
+            class="menu menu-md dropdown-content bg-secondary text-secondary-content rounded-box z-1 mt-3 w-52 p-2 border border-primary">
+            <li class="@GenerateMenuStyleClasses("/")">
+                <a href="/" class="duration-500">Home</a>
+            </li>
+            @foreach (var item in _model.Links)
+            {
+                <li class="@GenerateMenuStyleClasses(item.Url)">
+                    <a href="@item.Url" class="duration-500">@item.Name</a>
+                </li>
+            }
+            <li class="@GenerateMenuStyleClasses("/contact")">
+                <a href="contact" class="duration-500">Kontakt</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="navbar bg-secondary">
+    
+</div>
