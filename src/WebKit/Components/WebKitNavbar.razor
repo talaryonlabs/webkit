@@ -11,8 +11,16 @@
     
     protected override void OnParametersSet()
     {
-        if(ChildContent is not null) _parameters.Add("ChildContent", ChildContent);
-        if(InputAttributes is not null) _parameters.Add("InputAttributes", InputAttributes);
+        if (ChildContent is not null)
+        {
+            if(!_parameters.TryAdd("ChildContent", ChildContent))
+                _parameters["ChildContent"] = ChildContent;
+        }
+        if (InputAttributes is not null)
+        {
+            if (!_parameters.TryAdd("InputAttributes", InputAttributes))
+                _parameters["InputAttributes"] = InputAttributes;
+        }
     }
 
 }
