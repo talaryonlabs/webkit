@@ -14,7 +14,7 @@
         </video>
     </div>
     <div class="hero-overlay"></div>
-    <div class="hero-content w-dvw text-neutral-content text-center z-[1]">
+    <div class="hero-content w-dvw text-neutral-content text-center z-[1] @InputAttributes?.GetValueOrDefault("webkit:hero-content:class", "")">
         @ChildContent
     </div>
 </div>
