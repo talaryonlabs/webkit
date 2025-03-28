@@ -7,7 +7,7 @@
     public Dictionary<string, object>? InputAttributes { get; set; }
 }
 
-<div class="container mx-auto pt-10 pb-10 px-5 xl:px-0 @InputAttributes?.GetValueOrDefault("class", "")">
+<div class="container mx-auto pt-10 pb-10 px-5 xl:px-0 @InputAttributes?.GetValueOrDefault("webkit:class", "")">
     @if (IsLoading)
     {
         <WebKitLoader />

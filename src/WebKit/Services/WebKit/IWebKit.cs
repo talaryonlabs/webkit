@@ -15,6 +15,7 @@ public interface IWebKit
     
     ValueTask<T?> Single<T>() where T : IDirectusModel;
     ValueTask<T?> Select<T>(string? id) where T : IDirectusModel;
+    ValueTask<DirectusResponse<T[]>?> Many<T>() where T : IDirectusModel;
     ValueTask<DirectusResponse<T[]>?> Many<T>(int limit, int offset, string[] sort) where T : IDirectusModel;
 
     ValueTask<DirectusBlogPost?> GetBlogPost(string? id);

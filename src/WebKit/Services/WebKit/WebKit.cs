@@ -48,6 +48,18 @@ public class WebKit : IWebKit
         return result != null ? result.Data ?? default : default;
     }
 
+    public async ValueTask<DirectusResponse<T[]>?> Many<T>() where T : IDirectusModel
+    {
+        var item = Activator.CreateInstance<T>();
+        var result = await _directus
+            .Many<T>(item.GetTable())
+            .Fields(item.GetFields())
+            .IncludeMetadata()
+            .RunAsync();
+
+        return result ?? null;
+    }
+
     public async ValueTask<DirectusResponse<T[]>?> Many<T>(int limit, int offset, string[] sort)
         where T : IDirectusModel
     {
@@ -61,7 +73,7 @@ public class WebKit : IWebKit
             .IncludeMetadata()
             .RunAsync();
 
-        return result ?? default;
+        return result ?? null;
     }
 
     public ValueTask<DirectusBlogPost?> GetBlogPost(string? id) => Select<DirectusBlogPost>(id);
