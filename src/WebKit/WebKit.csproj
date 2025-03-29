@@ -13,9 +13,18 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
-    </ItemGroup>
+    <Choose>
+        <When Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')">
+            <ItemGroup>
+                <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" />
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" />
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
     
     <ItemGroup>
       <Compile Update="Components\WebKitGridViewItem.cs">
