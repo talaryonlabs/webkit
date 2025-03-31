@@ -3,18 +3,18 @@ using System.Text.Json.Serialization;
 
 namespace Talaryon.WebKit.Models;
 
-public class DirectusNavBar : IDirectusModel
+public class DirectusNavbar : IDirectusModel
 { 
     public string? Title { get; set; }
     public DirectusFile Logo { get; set; } = new();
-    public DirectusNavBarLink[] Links { get; set; } = [];
+    public DirectusNavbarLink[] Links { get; set; } = [];
     
     public virtual string GetTable() => "navbar";
     public virtual string[] GetFields() => ["title", "logo", "logo.id", "links", "links.sort", "links.name", "links.url"];
 }
 
 
-public class DirectusNavBarLink
+public class DirectusNavbarLink
 {
     [DefaultValue(-1)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

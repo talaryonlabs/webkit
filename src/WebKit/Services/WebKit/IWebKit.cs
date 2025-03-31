@@ -25,7 +25,7 @@ public interface IWebKit
 
     ValueTask<DirectusMeta?> GetMeta(string? id) => Select<DirectusMeta>(id);
 
-    ValueTask<DirectusNavBar?> GetNavBar() => Single<DirectusNavBar>();
+    ValueTask<DirectusNavbar?> GetNavbar() => Single<DirectusNavbar>();
 
     ValueTask<DirectusFooter?> GetFooter() => Single<DirectusFooter>();
     

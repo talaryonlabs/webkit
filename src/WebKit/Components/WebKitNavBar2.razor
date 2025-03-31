@@ -13,7 +13,7 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
 
-    private DirectusNavBar _model = new();
+    private DirectusNavbar _model = new();
 
     private string GenerateStyleClasses(string url, bool isLastItem)
     {
@@ -37,7 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _model = await WebKit.GetNavBar() ?? new();
+        _model = await WebKit.GetNavbar() ?? new();
         NavigationManager.LocationChanged += (o,e) => StateHasChanged();
     }
 }
