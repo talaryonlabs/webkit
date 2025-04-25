@@ -6,6 +6,7 @@
 
     [Parameter] public IEnumerable<IWebKitGalleryItem> Items { get; set; } = [];
     [Parameter] public string ButtonText { get; set; } = "Read more";
+    [Parameter] public bool IsSortedList { get; set; } = true;
 
     private readonly QueryString _thumbnailQuery = QueryString.Create(new KeyValuePair<string, string>[]
     {
@@ -36,17 +37,39 @@
 
 <div x-data="{ id: null, src: null, loading: false }">
     <div class="grid grid-cols-1 gap-8 md:hidden">
-        @foreach (var item in Items.OrderBy(image => image.Sort))
+        @if (IsSortedList)
         {
-            <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+            @foreach (var item in Items.OrderBy(image => image.Sort))
+            {
+                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+            }
+        }
+        else
+        {
+            @foreach (var item in Items)
+            {
+                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+            }
         }
     </div>
     <div class="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8">
-        @foreach (var item in Items.OrderBy(image => image.Sort))
+        @if (IsSortedList)
         {
-            <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
-                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
-            </a>
+            @foreach (var item in Items.OrderBy(image => image.Sort))
+            {
+                <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
+                    <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
+                </a>
+            }
+        }
+        else
+        {
+            @foreach (var item in Items)
+            {
+                <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
+                    <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
+                </a>
+            }
         }
     </div>
 
