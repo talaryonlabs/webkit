@@ -8,7 +8,7 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
 }
-<div class="hero min-h-[50vh] max-h-[60vh] @InputAttributes?.GetValueOrDefault("webkit:class", "")">
+<div class="hero min-h-[50vh] max-h-[100vh] @InputAttributes?.GetValueOrDefault("webkit:class", "")">
     <div class="overflow-auto w-full h-full" x-data>
         <video x-ref="hero_video" x-intersect="$refs.hero_video.muted = true; $refs.hero_video.play();" src="@VideoSource" class="w-full h-full" style="object-fit: cover" oncontextmenu="return false;" autoplay loop muted playsinline>
         </video>
