@@ -1,0 +1,15 @@
+﻿@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+}
+
+<div class="rounded-lg bg-base-100 drop-shadow-md p-5 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
+    <div class="text-xl lg:text-3xl pb-1 text-secondary">@Title</div>
+    <div>
+        @ChildContent
+    </div>
+</div>
