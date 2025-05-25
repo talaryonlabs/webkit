@@ -34,7 +34,10 @@
             <div class="card-body">
                 <h2 class="card-title">
                     @item.Title
-                    <div class="badge badge-secondary">@item.Subtitle</div>
+                    @if (item.Subtitle is not null)
+                    {
+                        <div class="badge badge-secondary">@item.Subtitle</div>
+                    }
                 </h2>
 
                 <p>
