@@ -1,16 +1,14 @@
 ﻿@using Talaryon.WebKit.Models
-@using Talaryon.WebKit.Services.WebKit
 @implements IWebKitNavbar
 
-@inject IWebKit WebKit
 @inject NavigationManager NavigationManager
 
 @code {
+    [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
+    
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
     
-    private DirectusNavbar _model = new();
-
     private string GenerateStyleClasses(string url, bool isLastItem)
     {
         var list = new List<string>(["navbar-item", "duration-500", "uppercase"]);
@@ -18,7 +16,7 @@
             list.Add("navbar-item-end");
         if (url == NavigationManager.Uri.Replace(NavigationManager.BaseUri, "/"))
             list.Add("navbar-item-active");
-
+        
         return string.Join(" ", list);
     }
 
@@ -31,11 +29,11 @@
         return string.Join(" ", list);
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _model = await WebKit.GetNavbar() ?? new();
         NavigationManager.LocationChanged += (o,e) => StateHasChanged();
     }
+
 }
 
 <div class="fixed top-0 left-0 translate-x-5 translate-y-5 z-[99]">
@@ -51,11 +49,14 @@
             <li class="@GenerateMenuStyleClasses("/")">
                 <a href="/" class="duration-500">Home</a>
             </li>
-            @foreach (var item in _model.Links)
+            @if (Links is not null)
             {
-                <li class="@GenerateMenuStyleClasses(item.Url)">
-                    <a href="@item.Url" class="duration-500">@item.Name</a>
-                </li>
+                @foreach (var item in Links)
+                {
+                    <li class="@GenerateMenuStyleClasses(item.Url)">
+                        <a href="@item.Url" class="duration-500" target="@item.Target">@item.Text</a>
+                    </li>
+                }
             }
             @*<li class="@GenerateMenuStyleClasses("/contact")">
                 <a href="contact" class="duration-500">Kontakt</a>

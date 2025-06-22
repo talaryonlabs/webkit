@@ -1,18 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using Talaryon.Toolbox.Services.Directus;
-using Talaryon.WebKit.Models;
+﻿using Microsoft.Extensions.Options;
 
 namespace Talaryon.WebKit.Services.WebKit;
 
 public class WebKit : IWebKit
 {
-    private readonly IDirectus _directus;
     private readonly WebKitComponentCollection _components;
+    private readonly Dictionary<Type, object> 
+        _globalOptions = new(),
+        _scopedOptions = new();
     
-    public WebKit(IDirectus directus, IOptions<WebKitOptions> optionsAccessor)
+    public WebKit(IOptions<WebKitOptions> optionsAccessor)
     {
-        _directus = directus;
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
         Default = optionsAccessor.Value;
@@ -21,74 +19,38 @@ public class WebKit : IWebKit
 
     public WebKitOptions Default { get; }
 
-    public Type? GetComponent<TBase>() where TBase : IWebKitComponent => _components.GetComponent<TBase>();
-
-    public string? GetAssetUrl(string assetId) => _directus.GetAssetUrl(assetId);
-    public string GetAssetUrl(string assetId, QueryString queryString) => _directus.GetAssetUrl(assetId, queryString);
-
-    public async ValueTask<T?> Single<T>() where T : IDirectusModel
+    public void ConfigureGlobal<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {
-        var item = Activator.CreateInstance<T>();
-        var result = await _directus
-            .Single<T>(item.GetTable())
-            .Fields(item.GetFields())
-            .RunAsync();
-
-        return result != null ? result.Data ?? default : default;
-    }
-
-    public async ValueTask<T?> Select<T>(string? id) where T : IDirectusModel
-    {
-        var item = Activator.CreateInstance<T>();
-        var result = await _directus
-            .Select<T>(item.GetTable(), id)
-            .Fields(item.GetFields())
-            .RunAsync();
-
-        return result != null ? result.Data ?? default : default;
-    }
-
-    public async ValueTask<DirectusResponse<T[]>?> Many<T>() where T : IDirectusModel
-    {
-        var item = Activator.CreateInstance<T>();
-        var result = await _directus
-            .Many<T>(item.GetTable())
-            .Fields(item.GetFields())
-            .IncludeMetadata()
-            .RunAsync();
-
-        return result ?? null;
-    }
-
-    public async ValueTask<DirectusResponse<T[]>?> Many<T>(int limit, int offset, string[] sort)
-        where T : IDirectusModel
-    {
-        var item = Activator.CreateInstance<T>();
-        var result = await _directus
-            .Many<T>(item.GetTable())
-            .Fields(item.GetFields())
-            .Sort(sort)
-            .Limit(limit)
-            .Offset(offset)
-            .IncludeMetadata()
-            .RunAsync();
-
-        return result ?? null;
-    }
-
-    public ValueTask<DirectusBlogPost?> GetBlogPost(string? id) => Select<DirectusBlogPost>(id);
-
-    public Task<DirectusResponse<DirectusBlogPost[]>?> GetBlogPosts(int limit = 9, int offset = 0)
-    {
-        var item = Activator.CreateInstance<DirectusBlogPost>();
+        if (_globalOptions.ContainsKey(typeof(T))) throw new WebKitOptionsAlreadyConfigured<T>();
         
-        return _directus
-            .Many<DirectusBlogPost>(item.GetTable())
-            .Fields(["id", "date_created", "date_scheduled", "title", "slug", "teaser", "image.id"])
-            .Sort("-date_scheduled")
-            .Limit(limit)
-            .Offset(offset)
-            .IncludeMetadata()
-            .RunAsync();
+        var options = Activator.CreateInstance<T>();
+        optionsConfigurator(options);
+        _globalOptions.Add(typeof(T), options);
     }
+
+    public void ConfigureScoped<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
+    {
+        // Drop scoped options first, if defined
+        if (_scopedOptions.ContainsKey(typeof(T))) _scopedOptions.Remove(typeof(T));
+        
+        var options = Activator.CreateInstance<T>();
+        optionsConfigurator(options);
+        _scopedOptions.Add(typeof(T), options);   
+    }
+
+    public T GetOptions<T>() where T : IWebKitOptions
+    {
+        if (_scopedOptions.TryGetValue(typeof(T), out var scopedOptions))
+        {
+            _scopedOptions.Remove(typeof(T));
+            return (T)scopedOptions;
+        }
+        
+        if(_globalOptions.TryGetValue(typeof(T), out var globalOptions))
+            return (T)globalOptions;
+        
+        throw new WebKitOptionsNotConfigured<T>();
+    }
+
+    public Type? GetComponent<TBase>() where TBase : IWebKitComponent => _components.GetComponent<TBase>();
 }

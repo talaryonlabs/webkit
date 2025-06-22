@@ -14,9 +14,6 @@
     
     protected override void OnParametersSet()
     {
-        if (BackgroundAssetId is not null)
-            _url = WebKit.GetAssetUrl(BackgroundAssetId);
-        
         if(BackgroundUrl is not null)
             _url = BackgroundUrl;
 

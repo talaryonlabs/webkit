@@ -1,9 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Http
-@using Talaryon.Toolbox.Services.Directus
-@inject IDirectus Directus
 
 @code {
 
+    private static string GetClickActions(IWebKitGalleryItem item)
+    {
+        return string.Join("; ", [
+            $"alt = '{item.Title}'",
+            $"loading = (src != '{item.Image}')",
+            $"src = '{item.Image}'",
+            "webKitGalleryViewer.showModal()"
+        ]);
+    }
+    
     [Parameter] public IEnumerable<IWebKitGalleryItem> Items { get; set; } = [];
     [Parameter] public string ButtonText { get; set; } = "Read more";
     [Parameter] public bool IsSortedList { get; set; } = true;
@@ -21,18 +29,6 @@
         new("quality", "100"),
         new("withoutEnlargement", "1")
     }!);
-
-    private string GetClickActions(string? id)
-    {
-        var src = Directus.GetAssetUrl(id, _imageQuery);
-        return string.Join("; ", [
-            $"id = '{id}'",
-            $"loading = (src != '{src}')",
-            $"src = '{src}'",
-            "webKitGalleryViewer.showModal()"
-        ]);
-    }
-
 }
 
 <div x-data="{ id: null, src: null, loading: false }">
@@ -41,14 +37,14 @@
         {
             @foreach (var item in Items.OrderBy(image => image.Sort))
             {
-                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+                <img class="w-full rounded-lg" src="@item.Image" alt="@item.Title">
             }
         }
         else
         {
             @foreach (var item in Items)
             {
-                <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _imageQuery)" alt="@item.Image.Title">
+                <img class="w-full rounded-lg" src="@item.Image" alt="@item.Title">
             }
         }
     </div>
@@ -57,8 +53,8 @@
         {
             @foreach (var item in Items.OrderBy(image => image.Sort))
             {
-                <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
-                    <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
+                <a class="cursor-pointer" x-on:click="@GetClickActions(item)">
+                    <img class="w-full rounded-lg" src="@item.Thumbnail" alt="@item.Title">
                 </a>
             }
         }
@@ -66,8 +62,8 @@
         {
             @foreach (var item in Items)
             {
-                <a class="cursor-pointer" x-on:click="@GetClickActions(item.Image.Id)">
-                    <img class="w-full rounded-lg" src="@Directus.GetAssetUrl(item.Image.Id, _thumbnailQuery)" alt="@item.Image.Title">
+                <a class="cursor-pointer" x-on:click="@GetClickActions(item)">
+                    <img class="w-full rounded-lg" src="@item.Thumbnail" alt="@item.Title">
                 </a>
             }
         }
@@ -75,7 +71,7 @@
 
     <dialog id="webKitGalleryViewer" class="modal">
         <div class="modal-box w-11/12 max-w-screen-2xl">
-            <img x-bind:src="src" x-bind:alt="id" x-on:load="loading = false" x-show="!loading"/>
+            <img x-bind:src="src" x-bind:alt="alt" x-on:load="loading = false" x-show="!loading"/>
             <div class="grid place-content-center" x-show="loading">
                 <div>
                     <span class="loading loading-ring loading-lg"></span>

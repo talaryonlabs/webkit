@@ -1,6 +1,4 @@
-@using Talaryon.Toolbox.Services.Directus
 @using Talaryon.WebKit.Services.WebKit
-@inject IDirectus Directus
 @inject IWebKit WebKit
 @rendermode InteractiveServer
 
@@ -11,27 +9,35 @@
     [Parameter] public string? Description { get; set; }
 
     [Parameter] public string? Image { get; set; }
+
+    private WebKitMetaOptions _metaOptions = new();
+    
+    protected override void OnParametersSet()
+    {
+        _metaOptions = WebKit.GetOptions<WebKitMetaOptions>();
+    }
+
 }
 
-<PageTitle>@(Title ?? WebKit.Default.DefaultPageTitle)</PageTitle>
+<PageTitle>@(Title ?? _metaOptions.Title)</PageTitle>
 <HeadContent>
-    <title>@(Title ?? WebKit.Default.DefaultPageTitle)</title>
+    <title>@(Title ?? _metaOptions.Title)</title>
 
-    <meta name="description" content="@(Description ?? WebKit.Default.DefaultPageDescription)"/>
+    <meta name="description" content="@(Description ?? _metaOptions.Description)"/>
 
     <meta property="og:type" content="website"/>
-    <meta property="og:title" content="@(Title ?? WebKit.Default.DefaultPageTitle)"/>
-    <meta property="og:description" content="@(Description ?? WebKit.Default.DefaultPageDescription)"/>
-    <meta property="og:image" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)"/>
-    <meta property="og:site_name" content="@WebKit.Default.ApplicationName"/>
+    <meta property="og:title" content="@(Title ?? _metaOptions.Title)"/>
+    <meta property="og:description" content="@(Description ?? _metaOptions.Description)"/>
+    <meta property="og:image" content="@(Image ?? _metaOptions.Image)"/>
+    <meta property="og:site_name" content="@_metaOptions.ApplicationName"/>
 
     <meta name="twitter:card" content="summary_large_image">
-    @if (WebKit.Default.TwitterAccount?.Length > 0)
+    @*@if (WebKit.Default.TwitterAccount?.Length > 0)
     {
         <meta name="twitter:site" content="@WebKit.Default.TwitterAccount">
-    }
-    <meta name="twitter:title" content="@(Title ?? WebKit.Default.DefaultPageTitle)">
-    <meta name="twitter:description" content="@(Description ?? WebKit.Default.DefaultPageDescription)">
-    <meta name="twitter:image" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)">
-    <meta name="twitter:image:src" content="@Directus.GetAssetUrl(Image ?? WebKit.Default.DefaultMetaImage)">
+    }*@
+    <meta name="twitter:title" content="@(Title ?? _metaOptions.Title)">
+    <meta name="twitter:description" content="@(Description ?? _metaOptions.Description)">
+    <meta name="twitter:image" content="@(Image ?? _metaOptions.Image)">
+    <meta name="twitter:image:src" content="@(Image ?? _metaOptions.Image)">
 </HeadContent>

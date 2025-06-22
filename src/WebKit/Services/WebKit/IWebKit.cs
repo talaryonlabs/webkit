@@ -1,33 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
-using Talaryon.Toolbox.Services.Directus;
-using Talaryon.WebKit.Models;
+﻿
+
+using Talaryon.Toolbox;
 
 namespace Talaryon.WebKit.Services.WebKit;
 
 public interface IWebKit
 {
-    WebKitOptions Default { get; }
+    void ConfigureGlobal<T>(Action<T> optionsConfigurator) where T : IWebKitOptions;
+    void ConfigureScoped<T>(Action<T> optionsConfigurator) where T : IWebKitOptions;
     
+    
+    T GetOptions<T>() where T : IWebKitOptions;
+
+
     Type? GetComponent<TBase>() where TBase : IWebKitComponent;
+}
+
+public interface IWebKitOptions
+{
     
-    string? GetAssetUrl(string assetId);
-    string GetAssetUrl(string assetId, QueryString queryString);
-    
-    ValueTask<T?> Single<T>() where T : IDirectusModel;
-    ValueTask<T?> Select<T>(string? id) where T : IDirectusModel;
-    ValueTask<DirectusResponse<T[]>?> Many<T>() where T : IDirectusModel;
-    ValueTask<DirectusResponse<T[]>?> Many<T>(int limit, int offset, string[] sort) where T : IDirectusModel;
-
-    ValueTask<DirectusBlogPost?> GetBlogPost(string? id);
-    Task<DirectusResponse<DirectusBlogPost[]>?> GetBlogPosts(int limit = 9, int offset = 0);
-
-    ValueTask<DirectusPage?> GetPage(string? id) => Select<DirectusPage>(id);
-
-    ValueTask<DirectusMeta?> GetMeta(string? id) => Select<DirectusMeta>(id);
-
-    ValueTask<DirectusNavbar?> GetNavbar() => Single<DirectusNavbar>();
-
-    ValueTask<DirectusFooter?> GetFooter() => Single<DirectusFooter>();
-    
-
 }

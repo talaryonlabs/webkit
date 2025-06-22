@@ -2,31 +2,27 @@
 @inherits WebKitComponentBase<WebKitSimpleNavbar>
 
 @code {
-    
+
     [Parameter] public Type? OverrideType { get; set; }
     [Parameter] public override RenderFragment? ChildContent { get; set; }
+
     [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
-    
+
     private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
-    
+
     protected override void OnParametersSet()
     {
-        if (ChildContent is not null)
-        {
-            if(!_parameters.TryAdd("ChildContent", ChildContent))
-                _parameters["ChildContent"] = ChildContent;
-        }
-        if (InputAttributes is not null)
-        {
-            if (!_parameters.TryAdd("InputAttributes", InputAttributes))
-                _parameters["InputAttributes"] = InputAttributes;
-        }
+        if (ChildContent is not null && !_parameters.TryAdd("ChildContent", ChildContent))
+            _parameters["ChildContent"] = ChildContent;
+
+        if (InputAttributes is not null && !_parameters.TryAdd("InputAttributes", InputAttributes))
+            _parameters["InputAttributes"] = InputAttributes;
     }
 
 }
+
 @inject IWebKit WebKit
 
-@if ((Component = OverrideType ?? WebKit.GetComponent<IWebKitNavbar>() ?? Component) is not null)
-{
-    <DynamicComponent Type="@Component" Parameters="@_parameters" />
-}
+<DynamicComponent
+    Type="@(Component = WebKit.GetComponent<IWebKitNavbar>() ?? throw new WebKitComponentNotFoundException())"
+    Parameters="@_parameters"/>

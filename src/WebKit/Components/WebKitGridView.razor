@@ -22,12 +22,12 @@
                 @if (item.Url?.Length > 0)
                 {
                     <a href="@item.Url">
-                        <img src="@Directus.GetAssetUrl(item.Image.Id)" alt="@item.Image.Title">
+                        <img src="@Directus.GetAssetUrl(item.Image.Url)" alt="@item.Image.Alt">
                     </a>
                 }
                 else
                 {
-                    <img src="@Directus.GetAssetUrl(item.Image.Id)" alt="@item.Image.Title">
+                    <img src="@Directus.GetAssetUrl(item.Image.Url)" alt="@item.Image.Alt">
                 }
             </figure>
 

@@ -1,0 +1,40 @@
+@using Talaryon.WebKit.Models
+@implements Talaryon.WebKit.IWebKitFooter
+@rendermode InteractiveServer
+
+@code {
+
+    [Parameter] public string? CopyrightText { get; set; }
+    [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
+    [Parameter] public IEnumerable<WebKitSocialIcon>? SocialIcons { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
+}
+
+<footer class="footer footer-center p-10 bg-secondary text-secondary-content">
+    <nav class="flex flex-wrap gap-4">
+        @if (Links is not null)
+        {
+            @foreach (var item in Links)
+            {
+                <a class="link link-hover" href="@item.Url" target="@item.Target">@item.Text</a>
+            }
+        }
+    </nav>
+    <nav class="md:place-self-center md:justify-self-center">
+        <div class="grid grid-flow-col gap-4">
+            @if (SocialIcons is not null)
+            {
+                @foreach (var item in SocialIcons)
+                {
+                    <a href="@item.Url" target="@item.Target">
+                        <img class="footer-social-icon rounded-lg" src="@item.Image" alt="@item.Text"/>
+                    </a>
+                }
+            }
+        </div>
+    </nav>
+    <aside>
+        <p>Copyright © @DateTime.Now.Year - @CopyrightText</p>
+    </aside>
+</footer>

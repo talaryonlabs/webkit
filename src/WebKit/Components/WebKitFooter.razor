@@ -1,5 +1,6 @@
 ﻿@using Talaryon.WebKit.Services.WebKit
 @inherits WebKitComponentBase<WebKitSimpleFooter>
+@inject IWebKit WebKit
 
 @code {
     private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
@@ -10,14 +11,13 @@
     
     protected override void OnParametersSet()
     {
-        if(ChildContent is not null) _parameters.Add("ChildContent", ChildContent);
-        if(InputAttributes is not null) _parameters.Add("InputAttributes", InputAttributes);
+        if (ChildContent is not null && !_parameters.TryAdd("ChildContent", ChildContent))
+            _parameters["ChildContent"] = ChildContent;
+
+        if (InputAttributes is not null && !_parameters.TryAdd("InputAttributes", InputAttributes))
+            _parameters["InputAttributes"] = InputAttributes;
     }
 
 }
-@inject IWebKit WebKit
 
-@if ((Component = WebKit.GetComponent<IWebKitFooter>() ?? Component) is not null)
-{
-    <DynamicComponent Type="@Component" Parameters="@_parameters" />
-}
+<DynamicComponent Type="@(Component = WebKit.GetComponent<IWebKitFooter>() ?? throw new WebKitComponentNotFoundException())" Parameters="@_parameters" />

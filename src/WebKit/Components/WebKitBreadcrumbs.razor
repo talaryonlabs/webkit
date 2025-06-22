@@ -5,7 +5,7 @@
     public Dictionary<string, object>? InputAttributes { get; set; }
 }
 
-<div class="breadcrumbs text-sm pb-5 @InputAttributes?.GetValueOrDefault("class", "")" style="@InputAttributes?.GetValueOrDefault("style", "")">
+<div class="breadcrumbs text-sm pb-5 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
     <ul>
         <li>
             <a href="/">Home</a>

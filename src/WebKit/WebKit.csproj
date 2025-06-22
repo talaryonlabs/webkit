@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
@@ -42,6 +42,16 @@
       <Compile Update="Components\WebKitPriceViewLabels.cs">
         <DependentUpon>WebKitPriceView.razor</DependentUpon>
       </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Blog\WebKitBlog.razor" />
+      <UpToDateCheckInput Remove="Components\Blog\WebKitBlogPost.razor" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Remove="Components\WebKitNavBar2.razor" />
+      <None Include="Components\WebKitNavBar2.razor" />
     </ItemGroup>
 
 
