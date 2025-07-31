@@ -8,4 +8,5 @@ public class WebKitMetaOptions : IWebKitOptions
     public string? Title { get; set; }
     public string? Description { get; set; }
     public string? Image { get; set; }
+    public string? BaseUrl { get; set; }
 }

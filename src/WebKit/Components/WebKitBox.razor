@@ -8,8 +8,11 @@
 }
 
 <div class="rounded-lg bg-base-100 drop-shadow-md p-5 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
-    <div class="text-xl lg:text-3xl pb-1 text-secondary">@Title</div>
-    <div>
+    @if (Title is not null)
+    {
+        <div class="text-xl lg:text-3xl pb-1 text-secondary">@Title</div>
+    }
+    <div class="@InputAttributes?.GetValueOrDefault("webkit:content:class", "")">
         @ChildContent
     </div>
 </div>
