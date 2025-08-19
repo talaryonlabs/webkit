@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 
 namespace Talaryon.WebKit.Services.WebKit;
 
@@ -8,7 +9,7 @@ public class WebKit : IWebKit
     private readonly Dictionary<Type, object> 
         _globalOptions = new(),
         _scopedOptions = new();
-    
+
     public WebKit(IOptions<WebKitOptions> optionsAccessor)
     {
         ArgumentNullException.ThrowIfNull(optionsAccessor);

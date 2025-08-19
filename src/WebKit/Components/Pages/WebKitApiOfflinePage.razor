@@ -2,13 +2,13 @@
 @using Talaryon.Toolbox.Services.Directus
 @using Talaryon.WebKit.Components.Layouts
 @inject NavigationManager NavigationManager
-@inject IDirectus Directus
+@inject IServiceProvider ServiceProvider
 @layout WebKitApiOfflineLayout
 @code
 {
     protected override async Task OnInitializedAsync()
     {
-        if (await Directus.Test())
+        if (ServiceProvider.GetService(typeof(IDirectus)) is IDirectus directus && await directus.Test())
         {
             NavigationManager.NavigateTo("/");
         }
