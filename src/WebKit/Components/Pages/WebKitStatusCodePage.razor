@@ -1,0 +1,15 @@
+@page "/webkit/status-code/{code}"
+@page "/webkit/status-code/{code}/{url}"
+@code {
+    [Parameter]
+    public string? Code { get; set; }
+
+    [Parameter]
+    public string? Url { get; set; }
+}
+
+<WebKitMeta Title="@($"Error {Code}")" />
+
+<WebKitContent IsLoading="false">
+    <WebKitStatusCodePage Code="@Code" Url="@Url" />
+</WebKitContent>

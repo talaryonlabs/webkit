@@ -1,0 +1,30 @@
+﻿@page "/webkit/api-offline"
+@using Talaryon.Toolbox.Services.Directus
+@using Talaryon.WebKit.Components.Layouts
+@inject NavigationManager NavigationManager
+@inject IDirectus Directus
+@layout WebKitApiOfflineLayout
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        if (await Directus.Test())
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
+
+<WebKitMeta Title="API offline." />
+
+<WebKitContent IsLoading="false" webkit:class="justify-items-center">
+    <WebKitBox webkit:class="max-w-2xl" webkit:content:class="p-10 space-y-20 justify-items-center">
+        <div class="w-md">
+            <img src="https://cdn.talaryon.dev/Assets/OSG/Logo/osg-logo.horizontal-dark.svg" alt="OSG Logo" />
+        </div>
+        <div class="text-error text-4xl">
+            <p>Our API is currently offline.</p>
+            <p>Please try again later.</p>
+        </div>
+    </WebKitBox>
+</WebKitContent>
