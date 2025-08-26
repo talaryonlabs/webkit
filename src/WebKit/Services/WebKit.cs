@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
-namespace Talaryon.WebKit.Services.WebKit;
+namespace Talaryon.WebKit.Services;
 
 public class WebKit : IWebKit
 {
@@ -10,7 +9,7 @@ public class WebKit : IWebKit
         _globalOptions = new(),
         _scopedOptions = new();
 
-    public WebKit(IOptions<WebKitOptions> optionsAccessor)
+    public WebKit(IOptions<WebKitSettings> optionsAccessor)
     {
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
@@ -18,7 +17,7 @@ public class WebKit : IWebKit
         _components = optionsAccessor.Value.Components;
     }
 
-    public WebKitOptions Default { get; }
+    public WebKitSettings Default { get; }
 
     public void ConfigureGlobal<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {

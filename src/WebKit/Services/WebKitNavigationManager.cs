@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Talaryon.Toolbox.Extensions;
 
-namespace Talaryon.WebKit.Services.WebKit;
+namespace Talaryon.WebKit.Services;
 
 public interface IWebKitNavigationManager
 {

@@ -1,28 +1,27 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Talaryon.Toolbox.Extensions;
+using Talaryon.WebKit.Services;
 
 namespace Talaryon.WebKit;
 
 public static class WebKitExtensions
 {
-    public static IServiceCollection AddWebKitComponents(this IServiceCollection services)
+    public static IServiceCollection AddWebKitComponents(this IServiceCollection services, Action<WebKitSettings2>? optionsConfigurator = null)
     {
-        services
-            .AddOptions()
-            .AddSingleton<Services.WebKit.WebKit>()
-            .AddSingleton<Services.WebKit.IWebKit>(x => x.GetRequiredService<Services.WebKit.WebKit>());
+        if (optionsConfigurator is not null)
+            services.AddSingleton<IWebKit, Services.WebKit, WebKitSettings2>(optionsConfigurator);
+        else
+            services.AddSingleton<IWebKit, Services.WebKit>();
         
-        services
-            .AddOptions()
-            .AddScoped<Services.WebKit.WebKitNavigationManager>()
-            .AddScoped<Services.WebKit.IWebKitNavigationManager>(x => x.GetRequiredService<Services.WebKit.WebKitNavigationManager>());
-
+        services.AddScoped<IWebKitNavigationManager, WebKitNavigationManager>();
+        
         return services;
-    }
+    }  
 
-    public static void ConfigureGlobal<T>(this WebApplication app, Action<T> optionsConfigurator) where T : Services.WebKit.IWebKitOptions =>
+    public static void ConfigureGlobal<T>(this WebApplication app, Action<T> optionsConfigurator) where T : IWebKitOptions =>
         app
             .Services
-            .GetService<Services.WebKit.IWebKit>()?
-            .ConfigureGlobal<T>(optionsConfigurator);
+            .GetService<IWebKit>()?
+            .ConfigureGlobal(optionsConfigurator);
 }

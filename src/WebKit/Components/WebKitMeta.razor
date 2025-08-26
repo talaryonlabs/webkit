@@ -1,13 +1,12 @@
-@using Talaryon.WebKit.Services.WebKit
+@using Talaryon.WebKit.Services
+@using Talaryon.WebKit.Services.Options
 @inject IWebKit WebKit
 @rendermode InteractiveServer
 
 @code {
 
     [Parameter] public string? Title { get; set; }
-
     [Parameter] public string? Description { get; set; }
-
     [Parameter] public string? Image { get; set; }
 
     private WebKitMetaOptions _metaOptions = new();

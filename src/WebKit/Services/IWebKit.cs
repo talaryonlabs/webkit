@@ -1,8 +1,4 @@
-﻿
-
-using Talaryon.Toolbox;
-
-namespace Talaryon.WebKit.Services.WebKit;
+﻿namespace Talaryon.WebKit.Services;
 
 public interface IWebKit
 {

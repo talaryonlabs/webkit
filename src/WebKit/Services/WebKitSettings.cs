@@ -1,9 +1,13 @@
 ﻿using System.Globalization;
 using Talaryon.Toolbox;
 
-namespace Talaryon.WebKit.Services.WebKit;
+namespace Talaryon.WebKit.Services;
 
-public sealed class WebKitOptions : TalaryonOptions<WebKitOptions>
+public class WebKitSettings2 : TalaryonOptions<WebKitSettings2>
+{
+}
+
+public class WebKitSettings : TalaryonOptions<WebKitSettings>
 {
     public string? ApplicationName { get; set; }
     public string? ApplicationUrl { get; set; }

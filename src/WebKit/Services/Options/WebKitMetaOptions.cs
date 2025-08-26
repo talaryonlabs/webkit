@@ -1,6 +1,4 @@
-﻿using Talaryon.Toolbox;
-
-namespace Talaryon.WebKit.Services.WebKit;
+﻿namespace Talaryon.WebKit.Services.Options;
 
 public class WebKitMetaOptions : IWebKitOptions
 {
