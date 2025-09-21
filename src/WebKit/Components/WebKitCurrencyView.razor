@@ -1,0 +1,37 @@
+﻿@using System.Globalization
+@using Talaryon.WebKit.Services
+@using Talaryon.WebKit.Services.Options
+
+@inject IWebKit WebKit
+
+@rendermode InteractiveAuto
+
+@code {
+    [Parameter] public required float Value { get; set; }
+
+    private string? _symbol;
+    private CultureInfo? _cultureInfo;
+    
+    protected override void OnParametersSet()
+    {
+        var cultureInfo = WebKit.GetOptions<WebKitI18NOptions>().CultureInfo;
+
+        _symbol = cultureInfo.NumberFormat.CurrencySymbol;
+        _cultureInfo = (CultureInfo)cultureInfo.Clone();
+        _cultureInfo.NumberFormat.CurrencyDecimalDigits = 0;
+        _cultureInfo.NumberFormat.CurrencyGroupSizes = [];
+        _cultureInfo.NumberFormat.CurrencySymbol = "";
+    }
+
+    protected override void OnInitialized()
+    {
+        var cultureInfo = WebKit.GetOptions<WebKitI18NOptions>().CultureInfo;
+
+        _symbol = cultureInfo.NumberFormat.CurrencySymbol;
+        _cultureInfo = (CultureInfo)cultureInfo.Clone();
+        _cultureInfo.NumberFormat.CurrencyDecimalDigits = 0;
+        _cultureInfo.NumberFormat.CurrencyGroupSizes = [];
+        _cultureInfo.NumberFormat.CurrencySymbol = "";
+    }
+}
+<span>@_symbol @Value.ToString("C", _cultureInfo)</span>
