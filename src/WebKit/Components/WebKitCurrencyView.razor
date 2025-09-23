@@ -8,10 +8,13 @@
 
 @code {
     [Parameter] public required float Value { get; set; }
+    [Parameter] public string? Prefix { get; set; }
+    [Parameter] public string? Postfix { get; set; }
+    [Parameter] public bool IsCurrencyBefore { get; set; } = true;
 
     private string? _symbol;
     private CultureInfo? _cultureInfo;
-    
+
     protected override void OnParametersSet()
     {
         var cultureInfo = WebKit.GetOptions<WebKitI18NOptions>().CultureInfo;
@@ -19,7 +22,7 @@
         _symbol = cultureInfo.NumberFormat.CurrencySymbol;
         _cultureInfo = (CultureInfo)cultureInfo.Clone();
         _cultureInfo.NumberFormat.CurrencyDecimalDigits = 0;
-        _cultureInfo.NumberFormat.CurrencyGroupSizes = [];
+        //_cultureInfo.NumberFormat.CurrencyGroupSizes = [];
         _cultureInfo.NumberFormat.CurrencySymbol = "";
     }
 
@@ -30,8 +33,39 @@
         _symbol = cultureInfo.NumberFormat.CurrencySymbol;
         _cultureInfo = (CultureInfo)cultureInfo.Clone();
         _cultureInfo.NumberFormat.CurrencyDecimalDigits = 0;
-        _cultureInfo.NumberFormat.CurrencyGroupSizes = [];
+        // _cultureInfo.NumberFormat.CurrencyGroupSizes = [];
         _cultureInfo.NumberFormat.CurrencySymbol = "";
     }
+
+    private string Generate()
+    {
+        var items = new List<string>();
+
+        if (Prefix is { Length: > 0 })
+        {
+            items.Add(Prefix);
+        }
+
+        if (IsCurrencyBefore && _symbol is { Length: > 0 })
+        {
+            items.Add(_symbol);
+        }
+
+        items.Add(Value.ToString("C", _cultureInfo));
+
+        if (!IsCurrencyBefore && _symbol is { Length: > 0 })
+        {
+            items.Add(_symbol);
+        }
+
+        if (Postfix is { Length: > 0 })
+        {
+            items.Add(Postfix);
+        }
+
+        return string.Join(" ", items);
+    }
+
 }
-<span>@_symbol @Value.ToString("C", _cultureInfo)</span>
+
+<span class="font-mono">@Generate()</span>
