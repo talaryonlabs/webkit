@@ -5,6 +5,7 @@ namespace Talaryon.WebKit.Services;
 
 public class WebKitSettings2 : TalaryonOptions<WebKitSettings2>
 {
+    public WebKitComponentCollection Components { get; } = new();
 }
 
 public class WebKitSettings : TalaryonOptions<WebKitSettings>

@@ -1,15 +1,12 @@
 ﻿@using Talaryon.WebKit.Services
 @inherits WebKitComponentBase<WebKitSimpleNavbar>
+@inject IWebKit WebKit
 
 @code {
-
-    [Parameter] public Type? OverrideType { get; set; }
-    [Parameter] public override RenderFragment? ChildContent { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
-
     private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
-
+    [Parameter] public override RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
+    
     protected override void OnParametersSet()
     {
         if (ChildContent is not null && !_parameters.TryAdd("ChildContent", ChildContent))
@@ -21,8 +18,4 @@
 
 }
 
-@inject IWebKit WebKit
-
-<DynamicComponent
-    Type="@(Component = WebKit.GetComponent<IWebKitNavbar>() ?? throw new WebKitComponentNotFoundException())"
-    Parameters="@_parameters"/>
+<DynamicComponent Type="@(Component = (WebKit.GetComponent<IWebKitNavbar>() ?? Component) ?? throw new WebKitComponentNotFoundException())" Parameters="@_parameters" />

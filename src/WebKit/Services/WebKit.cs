@@ -9,15 +9,12 @@ public class WebKit : IWebKit
         _globalOptions = new(),
         _scopedOptions = new();
 
-    public WebKit(IOptions<WebKitSettings> optionsAccessor)
+    public WebKit(IOptions<WebKitSettings2> optionsAccessor)
     {
         ArgumentNullException.ThrowIfNull(optionsAccessor);
 
-        Default = optionsAccessor.Value;
         _components = optionsAccessor.Value.Components;
     }
-
-    public WebKitSettings Default { get; }
 
     public void ConfigureGlobal<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {

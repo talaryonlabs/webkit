@@ -4,7 +4,7 @@
 @inject IWebKit WebKit
 
 @code {
-    [Parameter] public List<WebKitPriceViewItem> Items { get; set; } = [];
+    [Parameter] public IEnumerable<WebKitPriceViewItem> Items { get; set; } = [];
 
     [Parameter] public WebKitPriceViewLabels Labels { get; set; } = new();
 
@@ -26,7 +26,7 @@
 
     protected override void OnParametersSet()
     {
-        _isOdd = Items.Count % 2 != 0;
+        _isOdd = Items.Count() % 2 != 0;
     }
 
 }
