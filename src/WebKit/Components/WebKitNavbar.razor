@@ -15,7 +15,6 @@
         if (InputAttributes is not null && !_parameters.TryAdd("InputAttributes", InputAttributes))
             _parameters["InputAttributes"] = InputAttributes;
     }
-
 }
 
 <DynamicComponent Type="@(Component = (WebKit.GetComponent<IWebKitNavbar>() ?? Component) ?? throw new WebKitComponentNotFoundException())" Parameters="@_parameters" />

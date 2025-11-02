@@ -8,7 +8,7 @@ public interface IWebKitNavigationManager
     void HandleError(int statusCode);
 }
 
-public class WebKitNavigationManager(IWebKit webKit, NavigationManager navigationManager) : IWebKitNavigationManager
+public class WebKitNavigationManager(NavigationManager navigationManager) : IWebKitNavigationManager
 {
     public void HandleError(int statusCode)
     {

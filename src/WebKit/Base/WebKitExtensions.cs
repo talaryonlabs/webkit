@@ -14,6 +14,7 @@ public static class WebKitExtensions
         else
             services.AddSingleton<IWebKit, Services.WebKit>();
         
+        services.AddScoped<IWebKitConfigurator, WebKitConfigurator>();
         services.AddScoped<IWebKitNavigationManager, WebKitNavigationManager>();
         
         return services;

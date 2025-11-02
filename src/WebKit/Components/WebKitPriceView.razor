@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using Talaryon.WebKit.Services
 @using Talaryon.WebKit.Services.Options
-@inject IWebKit WebKit
+@inject IWebKitConfigurator WebKitConfigurator
 
 @code {
     [Parameter] public IEnumerable<WebKitPriceViewItem> Items { get; set; } = [];
@@ -17,7 +17,7 @@
 
     protected override void OnInitialized()
     {
-        var currentCultureInfo = WebKit.GetOptions<WebKitI18NOptions>().CultureInfo ?? throw new CultureNotFoundException();
+        var currentCultureInfo = WebKitConfigurator.Get<WebKitI18NOptions>().CultureInfo ?? throw new CultureNotFoundException();
 
         _currencySymbol = currentCultureInfo.NumberFormat.CurrencySymbol;
         _cultureInfo = (CultureInfo)currentCultureInfo.Clone()!;

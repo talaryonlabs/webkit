@@ -1,6 +1,6 @@
 @using Talaryon.WebKit.Services
 @using Talaryon.WebKit.Services.Options
-@inject IWebKit WebKit
+@inject IWebKitConfigurator WebKitConfigurator
 @rendermode InteractiveServer
 
 @code {
@@ -13,7 +13,7 @@
     
     protected override void OnParametersSet()
     {
-        _metaOptions = WebKit.GetOptions<WebKitMetaOptions>();
+        _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>();
     }
 
 }
