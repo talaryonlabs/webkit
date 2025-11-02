@@ -19,7 +19,7 @@ public class WebKit : IWebKit
     }
 
 
-    public void ConfigureGlobal<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
+    public void Configure<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {
         if (_globalOptions.ContainsKey(typeof(T))) throw new WebKitOptionsAlreadyConfigured<T>();
         

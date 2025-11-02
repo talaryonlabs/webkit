@@ -1,6 +1,7 @@
 @using Talaryon.WebKit.Services
 @using Talaryon.WebKit.Services.Options
 @inject IWebKitConfigurator WebKitConfigurator
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 @code {
@@ -14,6 +15,21 @@
     protected override void OnParametersSet()
     {
         _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>();
+    }
+
+    protected override void OnInitialized()
+    {
+        WebKitConfigurator.RegisterHook<WebKitMetaOptions>(options =>
+        {
+            _metaOptions = options;
+            InvokeAsync(StateHasChanged);
+        });
+        NavigationManager.LocationChanged += (_, _) =>
+        {
+            _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
+            StateHasChanged();
+        };
+        _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
     }
 
 }

@@ -16,16 +16,23 @@
 
     protected override void OnParametersSet()
     {
-        _navbarOptions = WebKitConfigurator.Get<WebKitNavBarOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitNavBarOptions>();
-        Console.WriteLine("yolo");
+        
     }
 
     protected override void OnInitialized()
     {
+        WebKitConfigurator.RegisterHook<WebKitNavBarOptions>(options =>
+        {
+            Console.WriteLine($"Navbar Options: {options.Links.Count}");
+            _navbarOptions = options;
+            InvokeAsync(StateHasChanged);
+        });
         NavigationManager.LocationChanged += (_, _) =>
         {
+            _navbarOptions = WebKitConfigurator.Get<WebKitNavBarOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitNavBarOptions>();
             StateHasChanged();
         };
+        _navbarOptions = WebKitConfigurator.Get<WebKitNavBarOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitNavBarOptions>();
     }
 }
 

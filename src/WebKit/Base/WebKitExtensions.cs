@@ -24,5 +24,5 @@ public static class WebKitExtensions
         app
             .Services
             .GetService<IWebKit>()?
-            .ConfigureGlobal(optionsConfigurator);
+            .Configure(optionsConfigurator);
 }
