@@ -18,4 +18,4 @@
 
 }
 
-<DynamicComponent Type="@(Component = (WebKit.GetComponent<IWebKitFooter>() ?? Component) ?? throw new WebKitComponentNotFoundException())" Parameters="@_parameters" />
+<DynamicComponent Type="@typeof(WebKitExtendedFooter)" Parameters="@_parameters" />

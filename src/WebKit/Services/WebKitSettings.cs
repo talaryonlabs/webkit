@@ -5,7 +5,6 @@ namespace Talaryon.WebKit.Services;
 
 public class WebKitSettings2 : TalaryonOptions<WebKitSettings2>
 {
-    public WebKitComponentCollection Components { get; } = new();
 }
 
 public class WebKitSettings : TalaryonOptions<WebKitSettings>
@@ -18,8 +17,6 @@ public class WebKitSettings : TalaryonOptions<WebKitSettings>
     public CultureInfo DefaultCultureInfo { get; set; } = new("de-DE");
     public string? TwitterAccount { get; set; }
     public WebKitComponentTypes ComponentOverrides { get; } = new();
-    
-    public WebKitComponentCollection Components { get; } = new();
 }
 
 public sealed class WebKitComponentTypes

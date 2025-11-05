@@ -5,8 +5,6 @@ namespace Talaryon.WebKit.Services;
 
 public class WebKit : IWebKit
 {
-    private readonly WebKitComponentCollection _components;
-
     private readonly Dictionary<Type, object>
         _globalOptions = new();
 
@@ -14,8 +12,6 @@ public class WebKit : IWebKit
     public WebKit(IOptions<WebKitSettings2> optionsAccessor)
     {
         ArgumentNullException.ThrowIfNull(optionsAccessor);
-
-        _components = optionsAccessor.Value.Components;
     }
 
 
@@ -35,6 +31,4 @@ public class WebKit : IWebKit
         
         throw new WebKitOptionsNotConfigured<T>();
     }
-
-    public Type? GetComponent<TBase>() where TBase : IWebKitComponent => _components.GetComponent<TBase>();
 }

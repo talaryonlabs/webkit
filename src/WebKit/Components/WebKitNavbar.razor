@@ -17,4 +17,4 @@
     }
 }
 
-<DynamicComponent Type="@(Component = (WebKit.GetComponent<IWebKitNavbar>() ?? Component) ?? throw new WebKitComponentNotFoundException())" Parameters="@_parameters" />
+<DynamicComponent Type="@typeof(WebKitExtendedNavbar)" Parameters="@_parameters" />
