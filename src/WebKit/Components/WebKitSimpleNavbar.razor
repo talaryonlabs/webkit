@@ -1,13 +1,10 @@
 ﻿@using Talaryon.WebKit.Models
-@implements IWebKitNavbar
+@inherits WebKitComponent
 
 @inject NavigationManager NavigationManager
 
 @code {
     [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
-    
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
     
     private string GenerateStyleClasses(string url, bool isLastItem)
     {

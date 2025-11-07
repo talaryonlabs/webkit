@@ -1,6 +1,6 @@
 ﻿@using Talaryon.WebKit.Models
 @using Talaryon.WebKit.Services
-@implements IWebKitFooter
+@inherits WebKitComponent
 
 @inject IWebKit WebKit
 
@@ -8,8 +8,6 @@
 {
   [Parameter] public string? CopyrightText { get; set; }
   [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
-  [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
-  [Parameter] public RenderFragment? ChildContent { get; set; }
 }
 
 <footer

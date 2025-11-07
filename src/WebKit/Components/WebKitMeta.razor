@@ -1,7 +1,7 @@
 @using Talaryon.WebKit.Services
 @using Talaryon.WebKit.Services.Options
-@inject IWebKitConfigurator WebKitConfigurator
-@inject NavigationManager NavigationManager
+@inject IWebKitConfig WebKitConfig
+@inherits WebKitComponent
 @rendermode InteractiveServer
 
 @code {
@@ -11,27 +11,16 @@
     [Parameter] public string? Image { get; set; }
 
     private WebKitMetaOptions _metaOptions = new();
-    
-    protected override void OnParametersSet()
-    {
-        _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>();
-    }
 
     protected override void OnInitialized()
     {
-        WebKitConfigurator.RegisterHook<WebKitMetaOptions>(options =>
-        {
-            _metaOptions = options;
-            InvokeAsync(StateHasChanged);
-        });
-        NavigationManager.LocationChanged += (_, _) =>
-        {
-            _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
-            StateHasChanged();
-        };
-        _metaOptions = WebKitConfigurator.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
+        _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
     }
 
+    protected override void OnConfigurationSet()
+    {
+        _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
+    }
 }
 
 <PageTitle>@(Title ?? _metaOptions.Title)</PageTitle>

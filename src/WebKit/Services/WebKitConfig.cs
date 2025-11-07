@@ -1,20 +1,16 @@
 ﻿namespace Talaryon.WebKit.Services;
 
-public interface IWebKitConfigurator
+public interface IWebKitConfig
 {
     void ConfigureOnce<T>(Action<T> optionsConfigurator) where T : IWebKitOptions;
-    void RegisterHook<T>(Action<T> hook) where T : IWebKitOptions;
     T Get<T>() where T : IWebKitOptions;
 }
 
-public class WebKitConfigurator(IWebKit webkit) : IWebKitConfigurator
+public class WebKitConfig(IWebKit webkit) : IWebKitConfig
 {
     private readonly Dictionary<Type, object>
         _scopedOptions = new();
     
-    private readonly Dictionary<Type, List<object>>
-        _hooks = new();
-
     public void ConfigureOnce<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {
         Console.WriteLine($"Configuring scoped options for {typeof(T)}");
@@ -25,19 +21,8 @@ public class WebKitConfigurator(IWebKit webkit) : IWebKitConfigurator
         var options = Activator.CreateInstance<T>();
         optionsConfigurator(options);
         _scopedOptions.Add(typeof(T), options);
-
-        if (!_hooks.ContainsKey(typeof(T))) return;
-        options = Get<T>();
-        foreach (var hook in _hooks[typeof(T)])
-        {
-            (hook as Action<T>)?.Invoke(options);
-        }
-    }
-
-    public void RegisterHook<T>(Action<T> hook) where T : IWebKitOptions
-    {
-        if(!_hooks.ContainsKey(typeof(T))) _hooks.Add(typeof(T), []);
-        _hooks[typeof(T)].Add(hook);
+        
+        WebKitComponent.ApplyConfiguration();
     }
 
     public T Get<T>() where T : IWebKitOptions

@@ -1,20 +1,53 @@
-﻿@using Talaryon.WebKit.Services
-@inherits WebKitComponentBase<WebKitSimpleNavbar>
-@inject IWebKit WebKit
+﻿@using System.Data
+@using Talaryon.WebKit.Services
+@using Talaryon.WebKit.Services.Options
+@inherits WebKitComponent
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject IWebKitConfig WebKitConfig
+
 
 @code {
-    private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
-    [Parameter] public override RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
     
+    private WebKitNavBarOptions? _navbarOptions;
+
     protected override void OnParametersSet()
     {
-        if (ChildContent is not null && !_parameters.TryAdd("ChildContent", ChildContent))
-            _parameters["ChildContent"] = ChildContent;
-
-        if (InputAttributes is not null && !_parameters.TryAdd("InputAttributes", InputAttributes))
-            _parameters["InputAttributes"] = InputAttributes;
+        
     }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("initialized");
+        _navbarOptions = WebKitConfig.Get<WebKitNavBarOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitNavBarOptions>();
+    }
+
+    protected override void OnConfigurationSet()
+    {
+        Console.WriteLine("stateHasChanged");
+        _navbarOptions = WebKitConfig.Get<WebKitNavBarOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitNavBarOptions>();
+    }
+
 }
 
-<DynamicComponent Type="@typeof(WebKitExtendedNavbar)" Parameters="@_parameters" />
+<div class="bg-secondary">
+    <div class="container mx-auto">
+        <div class="navbar text-primary-content">
+            <div class="navbar-start gap-5">
+                <a class="btn btn-xl btn-link pr-10" href="/">
+                    <img src="@_navbarOptions?.LogoUrl" alt="Navigation Logo" class="w-64">
+                </a>
+                <div class="hidden lg:flex gap-5">
+                    @if (_navbarOptions is { Links.Count: > 0 })
+                    {
+                        @foreach (var link in _navbarOptions.Links)
+                        {
+                            <a class="btn btn-primary btn-ghost" href="@link.Url" target="@link.Target">@link.Text</a>
+                        }    
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

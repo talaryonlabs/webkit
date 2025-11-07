@@ -1,21 +1,38 @@
-﻿@using Talaryon.WebKit.Services
-@inherits WebKitComponentBase<WebKitSimpleFooter>
-@inject IWebKit WebKit
+@using Talaryon.WebKit.Models
+@inherits WebKitComponent
+@rendermode InteractiveServer
 
 @code {
-    private readonly IDictionary<string, object> _parameters = new Dictionary<string, object>();
-    [Parameter] public override RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] public override Dictionary<string, object>? InputAttributes { get; set; }
-    
-    protected override void OnParametersSet()
-    {
-        if (ChildContent is not null && !_parameters.TryAdd("ChildContent", ChildContent))
-            _parameters["ChildContent"] = ChildContent;
 
-        if (InputAttributes is not null && !_parameters.TryAdd("InputAttributes", InputAttributes))
-            _parameters["InputAttributes"] = InputAttributes;
-    }
-
+    [Parameter] public string? CopyrightText { get; set; }
+    [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
+    [Parameter] public IEnumerable<WebKitSocialIcon>? SocialIcons { get; set; }
 }
 
-<DynamicComponent Type="@typeof(WebKitExtendedFooter)" Parameters="@_parameters" />
+<footer class="footer footer-center p-10 bg-secondary text-secondary-content">
+    <nav class="flex flex-wrap gap-4">
+        @if (Links is not null)
+        {
+            @foreach (var item in Links)
+            {
+                <a class="link link-hover" href="@item.Url" target="@item.Target">@item.Text</a>
+            }
+        }
+    </nav>
+    <nav class="md:place-self-center md:justify-self-center">
+        <div class="grid grid-flow-col gap-4">
+            @if (SocialIcons is not null)
+            {
+                @foreach (var item in SocialIcons)
+                {
+                    <a href="@item.Url" target="@item.Target">
+                        <img class="footer-social-icon rounded-lg" src="@item.Image" alt="@item.Text"/>
+                    </a>
+                }
+            }
+        </div>
+    </nav>
+    <aside>
+        <p>Copyright © @DateTime.Now.Year - @CopyrightText</p>
+    </aside>
+</footer>

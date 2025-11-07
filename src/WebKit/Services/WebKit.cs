@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Talaryon.WebKit.Services.Options;
 
 namespace Talaryon.WebKit.Services;
@@ -14,6 +15,10 @@ public class WebKit : IWebKit
         ArgumentNullException.ThrowIfNull(optionsAccessor);
     }
 
+    public void ConfigureSimplePageMiddleware(Action<int, string> dynamicPageMiddlewareConfigurator)
+    {
+        
+    }
 
     public void Configure<T>(Action<T> optionsConfigurator) where T : IWebKitOptions
     {
