@@ -19,7 +19,7 @@ public class WebKitComponent  : ComponentBase, IDisposable
     }
     
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public Dictionary<string, object>? InputAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
 
     public WebKitComponent()
     {

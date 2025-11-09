@@ -53,6 +53,10 @@
       <Content Remove="Components\WebKitNavBar2.razor" />
       <None Include="Components\WebKitNavBar2.razor" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.10" />
+    </ItemGroup>
 
 
 </Project>

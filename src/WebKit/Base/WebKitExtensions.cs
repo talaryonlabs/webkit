@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Endpoints;
+using Microsoft.AspNetCore.Components.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Talaryon.Toolbox.Extensions;
 using Talaryon.WebKit.Services;
+using Talaryon.WebKit.Services.Options;
 
 namespace Talaryon.WebKit;
 
@@ -13,12 +19,54 @@ public static class WebKitExtensions
             services.AddSingleton<IWebKit, Services.WebKit, WebKitSettings2>(optionsConfigurator);
         else
             services.AddSingleton<IWebKit, Services.WebKit>();
+     
+        services
+            .AddRazorComponents()
+            .AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents();
+            
+        services.AddHttpContextAccessor()
+            .AddLocalization();
         
         services.AddScoped<IWebKitConfig, WebKitConfig>();
         services.AddScoped<IWebKitNavigation, WebKitNavigation>();
         
         return services;
-    }  
+    }
+
+    public static WebApplication BuildWithWebKit<TRootComponent>(this WebApplicationBuilder builder, Action<IWebKit>? optionsConfigurator = null)
+    {
+        var app = builder.Build();
+        var webkit = app.Services.GetService<IWebKit>() ?? throw new WebKitNotFound();
+        
+        // Configure the WebKit
+        optionsConfigurator?.Invoke(webkit);
+        
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseWebAssemblyDebugging();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error", createScopeForErrors: true);
+        }
+
+        app.UseStatusCodePagesWithReExecute("/webkit/status-code/{0}");
+
+        var i18NOptions = webkit.GetOptions<WebKitI18NOptions>();
+        
+        app.UseRequestLocalization(i18NOptions.RequestCultureProviders);
+        app.UseStaticFiles();
+        app.UseAntiforgery();
+
+        app.MapRazorComponents<TRootComponent>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            .AddAdditionalAssemblies(typeof(WebKitExtensions).Assembly);
+
+        return app;
+    }
 
     public static void ConfigureGlobal<T>(this WebApplication app, Action<T> optionsConfigurator) where T : IWebKitOptions =>
         app

@@ -7,7 +7,10 @@ public class WebKitException : Exception
     {
         Console.WriteLine(message);
     }
+    
 }
+
+public sealed class  WebKitNotFound() : Exception("WebKit not found.");
 
 public class WebKitComponentNotFoundException() : Exception("WebKitComponent not found.");
 
