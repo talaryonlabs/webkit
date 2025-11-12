@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Endpoints;
-using Microsoft.AspNetCore.Components.Infrastructure;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Talaryon.Toolbox.Extensions;
@@ -33,11 +29,14 @@ public static class WebKitExtensions
         
         return services;
     }
-
+    
     public static WebApplication BuildWithWebKit<TRootComponent>(this WebApplicationBuilder builder, Action<IWebKit>? optionsConfigurator = null)
     {
         var app = builder.Build();
         var webkit = app.Services.GetService<IWebKit>() ?? throw new WebKitNotFound();
+
+        (webkit as Talaryon.WebKit.Services.WebKit)!.UseApplication(app);
+        
         
         // Configure the WebKit
         optionsConfigurator?.Invoke(webkit);
@@ -60,6 +59,7 @@ public static class WebKitExtensions
         app.UseStaticFiles();
         app.UseAntiforgery();
 
+        app.MapStaticAssets();
         app.MapRazorComponents<TRootComponent>()
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()

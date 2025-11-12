@@ -1,19 +1,29 @@
-@using Talaryon.WebKit.Models
+﻿@using Talaryon.WebKit.Services.Options
+
+@using Talaryon.WebKit.Services
 @inherits WebKitComponent
+@inject IWebKitConfig WebKitConfig
 @rendermode InteractiveServer
 
 @code {
+    private WebKitFooterOptions? _footerOptions;
+    
+    protected override void OnInitialized()
+    {
+        _footerOptions = WebKitConfig.Get<WebKitFooterOptions>();
+    }
 
-    [Parameter] public string? CopyrightText { get; set; }
-    [Parameter] public IEnumerable<WebKitLink>? Links { get; set; }
-    [Parameter] public IEnumerable<WebKitSocialIcon>? SocialIcons { get; set; }
+    protected override void OnConfigurationSet()
+    {
+        _footerOptions = WebKitConfig.Get<WebKitFooterOptions>();
+    }
 }
 
 <footer class="footer footer-center p-10 bg-secondary text-secondary-content">
     <nav class="flex flex-wrap gap-4">
-        @if (Links is not null)
+        @if (_footerOptions is not null)
         {
-            @foreach (var item in Links)
+            @foreach (var item in _footerOptions.Links)
             {
                 <a class="link link-hover" href="@item.Url" target="@item.Target">@item.Text</a>
             }
@@ -21,9 +31,9 @@
     </nav>
     <nav class="md:place-self-center md:justify-self-center">
         <div class="grid grid-flow-col gap-4">
-            @if (SocialIcons is not null)
+            @if (_footerOptions is not null)
             {
-                @foreach (var item in SocialIcons)
+                @foreach (var item in _footerOptions.SocialIcons)
                 {
                     <a href="@item.Url" target="@item.Target">
                         <img class="footer-social-icon rounded-lg" src="@item.Image" alt="@item.Text"/>
@@ -33,6 +43,6 @@
         </div>
     </nav>
     <aside>
-        <p>Copyright © @DateTime.Now.Year - @CopyrightText</p>
+        <p>Copyright © @DateTime.Now.Year @(_footerOptions is {CopyrightText.Length: >0 } ? $"- {_footerOptions.CopyrightText}" : "")</p>
     </aside>
 </footer>
