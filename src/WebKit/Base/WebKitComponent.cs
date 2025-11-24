@@ -13,7 +13,7 @@ public class WebKitComponent  : ComponentBase, IDisposable
             foreach (var c in Components)
             {
                 c.OnConfigurationSet();
-                c.StateHasChanged();
+                c.InvokeAsync(() => c.StateHasChanged());
             }
         }
     }
