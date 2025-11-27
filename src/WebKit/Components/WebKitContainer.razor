@@ -7,7 +7,7 @@
     public Dictionary<string, object>? InputAttributes { get; set; }
 }
 <div class="container mx-auto pt-10 pb-10 px-5 xl:px-0 @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
-    <div class="max-w-4xl 2xl:max-w-7xl mx-auto">
+    <div class="max-w-4xl 2xl:max-w-7xl mx-auto @InputAttributes?.GetValueOrDefault("webkit:content:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:content:style", "")">
         @ChildContent    
     </div>
 </div>
