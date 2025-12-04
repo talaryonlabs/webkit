@@ -42,6 +42,9 @@
 }
 <div class="@_containerClasses" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
     <div class="@_contentClasses" style="@InputAttributes?.GetValueOrDefault("webkit:content:style", "")">
-        @ChildContent    
+        @if (ChildContent is not null)
+        {
+            @ChildContent 
+        }
     </div>
 </div>
