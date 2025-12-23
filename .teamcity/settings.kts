@@ -86,4 +86,8 @@ object CodeQuality : BuildType({
         perfmon {
         }
     }
+
+    requirements {
+        contains("teamcity.agent.name", "build-ferociousbyte-dev")
+    }
 })
