@@ -60,7 +60,7 @@ object Build : BuildType({
     }
 
     requirements {
-        contains("system.agent.name", "build-ferociousbyte-dev")
+        contains("teamcity.agent.name", "build-ferociousbyte-dev")
     }
 })
 
