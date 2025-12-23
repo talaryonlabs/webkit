@@ -75,6 +75,7 @@ object CodeQuality : BuildType({
     steps {
         qodana {
             id = "Qodana"
+            workingDir = "src/WebKit"
             linter = dotNet {
                 version = Qodana.DotNetVersion.LATEST
             }
