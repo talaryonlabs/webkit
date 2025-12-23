@@ -58,6 +58,10 @@ object Build : BuildType({
         perfmon {
         }
     }
+
+    requirements {
+        contains("system.agent.name", "build-ferociousbyte-dev")
+    }
 })
 
 object CodeQuality : BuildType({
