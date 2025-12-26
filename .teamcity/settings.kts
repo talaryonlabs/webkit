@@ -75,11 +75,11 @@ object CodeQuality : BuildType({
     steps {
         qodana {
             id = "Qodana"
-            workingDir = "src/WebKit"
             linter = dotNet {
                 version = Qodana.DotNetVersion.LATEST
             }
             inspectionProfile = default()
+            additionalQodanaArguments = "--project-dir src/WebKit"
             cloudToken = "credentialsJSON:d7203668-12e8-4dfb-9fcb-c9514995c460"
         }
     }
