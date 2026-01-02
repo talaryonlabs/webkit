@@ -6,8 +6,8 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
 
-    private string _defaultContainerClass = "@container pt-5 pb-5 px-5 2xl:px-0";
-    private string _defaultContentClass = "max-w-4xl 2xl:max-w-7xl mx-auto";
+    private readonly string _defaultContainerClass = "@container pt-5 pb-5 px-5 2xl:px-0";
+    private readonly string _defaultContentClass = "max-w-5xl 2xl:max-w-7xl mx-auto";
 
     private string _containerClasses = "";
     private string _contentClasses = "";

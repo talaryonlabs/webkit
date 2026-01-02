@@ -1,9 +1,15 @@
 ﻿@code {
+    public class TestClass
+    {
+        [Parameter] public string Yolo { get; set; }
+    }
+    
     [Parameter] public required string Title { get; set; }
     [Parameter] public required string ImageUrl { get; set; }
     [Parameter] public required RenderFragment ChildContent { get; set; }
     [Parameter] public string Size { get; set; } = "lg";
 
+    [Parameter] public RenderFragment<TestClass> Test { get; set; }
 
     private string GetCornerSize(string? position = "")
     {
@@ -24,7 +30,7 @@
 
 <div class="flex flex-col @GetCornerSize() @GetShadowSize()">
     <div class="pt-4 bg-primary @GetCornerSize("top")"></div>
-    <div class="flex flex-col lg:flex-row">
+    <div class="flex flex-col lg:flex-row h-full">
         <figure class="basis-1/3">
             @* Visible on mobile *@
             <img class="lg:hidden w-full h-full object-cover" src="@ImageUrl" alt="@Title"/>
@@ -32,16 +38,16 @@
             <img class="hidden lg:block w-full h-full object-cover @GetCornerSize("left")" src="@ImageUrl" alt="@Title"/>
         </figure>
         @* Visible on mobile *@
-        <div class="lg:hidden basis-2/3 p-4 space-y-4 @GetCornerSize("bottom")">
+        <div class="lg:hidden basis-2/3 p-4 @GetCornerSize("bottom")">
             <div class="text-xl">@Title</div>
             <div>
                 @ChildContent
             </div>
         </div>
         @* Visible on larger displays *@
-        <div class="hidden lg:block basis-2/3 p-4 space-y-4 @GetCornerSize("right")">
+        <div class="hidden lg:flex flex-col basis-2/3 p-4 gap-4 @GetCornerSize("right")">
             <div class="text-xl">@Title</div>
-            <div>
+            <div class="grow">
                 @ChildContent
             </div>
         </div>

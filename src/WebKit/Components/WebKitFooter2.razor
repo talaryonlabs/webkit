@@ -1,0 +1,32 @@
+﻿@code {
+
+    public enum WebKitFooterLayout
+    {
+        Full,
+        Container
+    }
+    
+    public class WebKitFooter2Options
+    {
+        public WebKitFooterLayout Layout { get; set; } = WebKitFooterLayout.Container;
+        public bool DisablePadding { get; set; }
+    }
+
+
+    [Parameter] public WebKitFooter2Options Options { get; set; } = new();
+    [Parameter] public required RenderFragment ChildContent { get; set; }
+    
+}
+
+<footer class="bg-secondary text-secondary-content">
+    @if (Options.Layout == WebKitFooterLayout.Full)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <WebKitContainer>
+            @ChildContent
+        </WebKitContainer>
+    }
+</footer>
