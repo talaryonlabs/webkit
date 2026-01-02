@@ -32,7 +32,7 @@ public class WebKit : IWebKit
         if (_globalOptions.ContainsKey(typeof(T)))
         {
             if (force == true) _globalOptions.Remove(typeof(T));
-            else throw new WebKitOptionsAlreadyConfigured<T>();;
+            else throw new WebKitOptionsAlreadyConfigured<T>();
         }
         
         var options = Activator.CreateInstance<T>();
