@@ -1,0 +1,15 @@
+@inherits WebKitComponent
+@code { 
+    [Parameter] public string? Content { get; set; }
+}
+
+<article class="prose max-w-none wrap-break-word text-left @GetWebKitClass()" style="@GetWebKitStyle()">
+    @if (Content is not null)
+    {
+        @((MarkupString)Content)
+    }
+    else
+    {
+        @ChildContent
+    }
+</article>
