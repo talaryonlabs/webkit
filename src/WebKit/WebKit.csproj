@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
         <RootNamespace>Talaryon.WebKit</RootNamespace>
         <AssemblyName>Talaryon.WebKit</AssemblyName>
+        <LangVersion>14</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,11 +15,7 @@
     </ItemGroup>
     
     <Choose>
-        <When Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')">
-            <ItemGroup>
-                <ProjectReference Include="..\..\..\Toolbox\src\Toolbox\Toolbox.csproj" />
-            </ItemGroup>
-        </When>
+        <When Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
         <Otherwise>
             <ItemGroup>
                 <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" />
@@ -55,7 +52,11 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.11" />
+      <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
     </ItemGroup>
 
 
