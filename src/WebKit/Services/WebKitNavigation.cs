@@ -15,11 +15,6 @@ public class WebKitNavigation : IWebKitNavigation
     public WebKitNavigation(NavigationManager navigationManager)
     {
         _navigationManager = navigationManager;
-        _navigationManager.LocationChanged += (_, _) =>
-        {
-            Console.WriteLine("Location changed");
-            WebKitComponent.ApplyConfiguration();
-        };
     }
     
     public void HandleError(int statusCode)

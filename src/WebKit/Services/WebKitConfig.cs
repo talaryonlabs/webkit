@@ -21,8 +21,6 @@ public class WebKitConfig(IWebKit webkit) : IWebKitConfig
         var options = Activator.CreateInstance<T>();
         optionsConfigurator(options);
         _scopedOptions.Add(typeof(T), options);
-        
-        WebKitComponent.ApplyConfiguration();
     }
 
     public T Get<T>() where T : IWebKitOptions
