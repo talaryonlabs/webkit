@@ -52,11 +52,8 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
+      <PackageReference Include="talaryon.toolbox" Version="1.0.0" />
     </ItemGroup>
 
 

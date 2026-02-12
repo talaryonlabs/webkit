@@ -1,4 +1,3 @@
 ﻿<Solution>
-  <Project Path="src/Toolbox/src/Toolbox/Toolbox.csproj" Type="Classic C#" />
-  <Project Path="src/WebKit/WebKit.csproj" Type="Classic C#" />
+  <Project Path="src/WebKit/WebKit.csproj" Type="C#" />
 </Solution>
