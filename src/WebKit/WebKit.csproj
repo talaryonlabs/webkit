@@ -14,15 +14,6 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
     
-    <Choose>
-        <When Condition="Exists('..\..\..\Toolbox\src\Toolbox\Toolbox.csproj')" />
-        <Otherwise>
-            <ItemGroup>
-                <ProjectReference Include="..\Toolbox\src\Toolbox\Toolbox.csproj" />
-            </ItemGroup>
-        </Otherwise>
-    </Choose>
-    
     <ItemGroup>
       <Compile Update="Components\WebKitGridViewItem.cs">
         <DependentUpon>WebKitGridView.razor</DependentUpon>
