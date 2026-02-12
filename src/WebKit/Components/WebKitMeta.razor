@@ -17,7 +17,7 @@
         _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
     }
 
-    protected override void OnConfigurationSet()
+    protected virtual void OnConfigurationSet()
     {
         _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
     }

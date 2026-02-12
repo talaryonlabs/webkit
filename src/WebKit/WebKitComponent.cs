@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace Talaryon.WebKit;
 
 public class WebKitComponent  : ComponentBase, IDisposable
 {
     private static readonly List<WebKitComponent> Components = [];
-
-    public static void ApplyConfiguration()
-    {
-        lock (Components)
-        {
-            foreach (var c in Components)
-            {
-                c.OnConfigurationSet();
-                c.InvokeAsync(() => c.StateHasChanged());
-            }
-        }
-    }
     
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? InputAttributes { get; set; }
+
+    [Inject]
+    private NavigationManager? NavigationManager
+    {
+        get;
+        set
+        {
+            if ((field = value) is not null)
+            {
+                field.LocationChanged += OnLocationChanged;
+            }
+        }
+    }
 
     public WebKitComponent()
     {
@@ -29,8 +31,9 @@ public class WebKitComponent  : ComponentBase, IDisposable
         }
     }
 
-    protected virtual void OnConfigurationSet()
+    protected virtual void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
+        
     }
 
     protected string? GetWebKitClass()
@@ -49,5 +52,6 @@ public class WebKitComponent  : ComponentBase, IDisposable
         {
             if (Components.Contains(this)) Components.Remove(this);
         }
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
