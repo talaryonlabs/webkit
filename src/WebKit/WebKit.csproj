@@ -44,7 +44,7 @@
     
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
-      <PackageReference Include="talaryon.toolbox" Version="1.0.0" />
+      <PackageReference Include="Talaryon.Toolbox" Version="1.0.0" />
     </ItemGroup>
 
 
