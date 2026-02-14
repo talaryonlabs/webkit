@@ -4,6 +4,9 @@
         [Parameter] public string Yolo { get; set; }
     }
     
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+    
     [Parameter] public required string Title { get; set; }
     [Parameter] public required string ImageUrl { get; set; }
     [Parameter] public required RenderFragment ChildContent { get; set; }
@@ -28,7 +31,7 @@
 
 <span class="hidden rounded-t-lg rounded-b-lg rounded-bl-lg rounded-br-lg rounded-lg"></span>
 
-<div class="flex flex-col @GetCornerSize() @GetShadowSize()">
+<div class="flex flex-col @GetCornerSize() @GetShadowSize() @InputAttributes?.GetValueOrDefault("webkit:class", "")">
     <div class="pt-5 bg-primary @GetCornerSize("top")"></div>
     <div class="flex flex-col lg:flex-row h-full">
         <figure class="basis-1/3">
