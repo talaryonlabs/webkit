@@ -47,7 +47,7 @@ object Webkit : BuildType({
         param("env.version", "-")
         param("env.package", "-")
         param("env.state", "-")
-        param("local.projectName", "Webkit")
+        param("local.projectName", "WebKit")
     }
 
     vcs {
