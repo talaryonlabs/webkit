@@ -16,7 +16,10 @@
         <RepositoryType>git</RepositoryType>
         <Company>Talaryon Labs</Company>
         <Product>Talaryon WebKit</Product>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
+        <IsPackable>true</IsPackable>
+        <Version>1.0.1</Version>
+        <PackageId>Talaryon.WebKit</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
