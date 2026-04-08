@@ -50,10 +50,6 @@ object Webkit : BuildType({
         param("local.projectName", "Toolbox")
     }
 
-    vcs {
-        root(HttpsGithubComTalaryonlabsToolboxRefsHeadsDev)
-    }
-
     steps {
         script {
             name = "Get Version Number"
