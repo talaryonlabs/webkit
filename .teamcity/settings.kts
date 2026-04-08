@@ -50,6 +50,10 @@ object Webkit : BuildType({
         param("local.projectName", "Toolbox")
     }
 
+    vcs {
+        root(DslContext.settingsRoot)
+    }
+
     steps {
         script {
             name = "Get Version Number"
