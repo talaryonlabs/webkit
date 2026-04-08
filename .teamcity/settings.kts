@@ -1,10 +1,8 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
 import jetbrains.buildServer.configs.kotlin.buildSteps.Qodana
-import jetbrains.buildServer.configs.kotlin.buildSteps.dotnetBuild
 import jetbrains.buildServer.configs.kotlin.buildSteps.qodana
 import jetbrains.buildServer.configs.kotlin.triggers.finishBuildTrigger
-import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -32,38 +30,8 @@ version = "2025.11"
 
 project {
 
-    buildType(Build)
     buildType(CodeQuality)
 }
-
-object Build : BuildType({
-    name = "Build"
-
-    vcs {
-        root(DslContext.settingsRoot)
-    }
-
-    steps {
-        dotnetBuild {
-            id = "dotnet"
-            projects = "src/WebKit/WebKit.csproj"
-        }
-    }
-
-    triggers {
-        vcs {
-        }
-    }
-
-    features {
-        perfmon {
-        }
-    }
-
-    requirements {
-        contains("teamcity.agent.name", "build-ferociousbyte-dev")
-    }
-})
 
 object CodeQuality : BuildType({
     name = "Code Quality"
@@ -86,7 +54,7 @@ object CodeQuality : BuildType({
 
     triggers {
         finishBuildTrigger {
-            buildType = "${Build.id}"
+            buildType = "Libraries_Webkit_Build"
         }
     }
 
