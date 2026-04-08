@@ -1,8 +1,4 @@
 import jetbrains.buildServer.configs.kotlin.*
-import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.Qodana
-import jetbrains.buildServer.configs.kotlin.buildSteps.qodana
-import jetbrains.buildServer.configs.kotlin.triggers.finishBuildTrigger
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -29,41 +25,4 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 version = "2025.11"
 
 project {
-
-    buildType(CodeQuality)
 }
-
-object CodeQuality : BuildType({
-    name = "Code Quality"
-
-    vcs {
-        root(DslContext.settingsRoot)
-    }
-
-    steps {
-        qodana {
-            id = "Qodana"
-            linter = dotNet {
-                version = Qodana.DotNetVersion.LATEST
-            }
-            inspectionProfile = default()
-            additionalQodanaArguments = "--project-dir src/WebKit"
-            cloudToken = "credentialsJSON:d7203668-12e8-4dfb-9fcb-c9514995c460"
-        }
-    }
-
-    triggers {
-        finishBuildTrigger {
-            buildType = "Libraries_Webkit_Build"
-        }
-    }
-
-    features {
-        perfmon {
-        }
-    }
-
-    requirements {
-        contains("teamcity.agent.name", "build-ferociousbyte-dev")
-    }
-})
