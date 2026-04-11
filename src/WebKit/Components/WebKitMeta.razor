@@ -1,38 +1,42 @@
-@using Talaryon.WebKit.Services
+@using Microsoft.AspNetCore.Server.Kestrel.Core
 @using Talaryon.WebKit.Services.Options
-@inject IWebKitConfig WebKitConfig
 @inherits WebKitComponent
 @rendermode InteractiveServer
 
 @code {
+    
+    private WebKitMetaOptions? _metaOptions;
+    private string? _title;
+    private string? _description;
+    private string? _image;
 
-    [Parameter] public string? Title { get; set; }
-    [Parameter] public string? Description { get; set; }
-    [Parameter] public string? Image { get; set; }
-
-    private WebKitMetaOptions _metaOptions = new();
-
-    protected override void OnInitialized()
+    protected override void OnComponentInitialized()
     {
-        _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
+        _metaOptions = WebKit.GetOptions<WebKitMetaOptions>();
     }
 
-    protected virtual void OnConfigurationSet()
+    protected override void OnPageChanged(WebKitPage page)
     {
-        _metaOptions = WebKitConfig.Get<WebKitMetaOptions>() ?? throw new WebKitOptionsNotConfigured<WebKitMetaOptions>();
+        Console.WriteLine("Page changed to " + page.Title + "");
+        _title = page is { Title.Length: > 0 } ? page.Title : null;
+        _description = page is { Description.Length: > 0 } ? page.Description : null;
+        _image = page is { Image.Length: > 0 } ? page.Image : null;
+        
+        InvokeAsync(StateHasChanged);
     }
+
 }
 
-<PageTitle>@(Title ?? _metaOptions.Title)</PageTitle>
+<PageTitle>@(_title ?? _metaOptions.Title)</PageTitle>
 <HeadContent>
-    <title>@(Title ?? _metaOptions.Title)</title>
+    <title>@(_title ?? _metaOptions.Title)</title>
 
-    <meta name="description" content="@(Description ?? _metaOptions.Description)"/>
+    <meta name="description" content="@(_description ?? _metaOptions.Description)"/>
 
     <meta property="og:type" content="website"/>
-    <meta property="og:title" content="@(Title ?? _metaOptions.Title)"/>
-    <meta property="og:description" content="@(Description ?? _metaOptions.Description)"/>
-    <meta property="og:image" content="@(Image ?? _metaOptions.Image)"/>
+    <meta property="og:title" content="@(_title ?? _metaOptions.Title)"/>
+    <meta property="og:description" content="@(_description ?? _metaOptions.Description)"/>
+    <meta property="og:image" content="@(_image ?? _metaOptions.Image)"/>
     <meta property="og:site_name" content="@_metaOptions.ApplicationName"/>
 
     <meta name="twitter:card" content="summary_large_image">
@@ -40,8 +44,8 @@
     {
         <meta name="twitter:site" content="@WebKit.Default.TwitterAccount">
     }*@
-    <meta name="twitter:title" content="@(Title ?? _metaOptions.Title)">
-    <meta name="twitter:description" content="@(Description ?? _metaOptions.Description)">
-    <meta name="twitter:image" content="@(Image ?? _metaOptions.Image)">
-    <meta name="twitter:image:src" content="@(Image ?? _metaOptions.Image)">
+    <meta name="twitter:title" content="@(_title ?? _metaOptions.Title)">
+    <meta name="twitter:description" content="@(_description ?? _metaOptions.Description)">
+    <meta name="twitter:image" content="@(_image ?? _metaOptions.Image)">
+    <meta name="twitter:image:src" content="@(_image ?? _metaOptions.Image)">
 </HeadContent>

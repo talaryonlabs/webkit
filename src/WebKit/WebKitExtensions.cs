@@ -9,10 +9,10 @@ namespace Talaryon.WebKit;
 
 public static class WebKitExtensions
 {
-    public static IServiceCollection AddWebKitComponents(this IServiceCollection services, Action<WebKitSettings2>? optionsConfigurator = null)
+    public static IServiceCollection AddWebKitComponents(this IServiceCollection services, Action<WebKitSettings>? optionsConfigurator = null)
     {
         if (optionsConfigurator is not null)
-            services.AddSingleton<IWebKit, Services.WebKit, WebKitSettings2>(optionsConfigurator);
+            services.AddSingleton<IWebKit, Services.WebKit, WebKitSettings>(optionsConfigurator);
         else
             services.AddSingleton<IWebKit, Services.WebKit>();
      
@@ -26,6 +26,7 @@ public static class WebKitExtensions
         
         services.AddScoped<IWebKitConfig, WebKitConfig>();
         services.AddScoped<IWebKitNavigation, WebKitNavigation>();
+        services.AddScoped<IWebKitSession, WebKitSession>();
         
         return services;
     }

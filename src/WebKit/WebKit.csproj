@@ -51,7 +51,6 @@
     
     <ItemGroup>
       <Content Remove="Components\WebKitNavBar2.razor" />
-      <None Include="Components\WebKitNavBar2.razor" />
     </ItemGroup>
     
     <ItemGroup>

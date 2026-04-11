@@ -12,7 +12,7 @@ public class WebKit : IWebKit
     private WebApplication? _app;
 
 
-    public WebKit(IOptions<WebKitSettings2> optionsAccessor)
+    public WebKit(IOptions<WebKitSettings> optionsAccessor)
     {
         ArgumentNullException.ThrowIfNull(optionsAccessor);
     }

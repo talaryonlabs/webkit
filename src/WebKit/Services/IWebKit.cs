@@ -10,5 +10,4 @@ public interface IWebKit
 
 public interface IWebKitOptions
 {
-    
 }

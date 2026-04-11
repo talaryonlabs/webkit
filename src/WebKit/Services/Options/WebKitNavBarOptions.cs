@@ -6,4 +6,5 @@ public class WebKitNavBarOptions : IWebKitOptions
 {
     public string LogoUrl { get; set; }
     public List<WebKitLink> Links { get; set; }
+    public string HeroImage { get; set; }
 }
