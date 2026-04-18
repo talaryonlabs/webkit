@@ -10,7 +10,11 @@ public class WebKitException : Exception
     
 }
 
-public sealed class  WebKitNotFound() : Exception("WebKit not found.");
+public sealed class WebKitNotFound : Exception
+{
+    public WebKitNotFound() : base("WebKit not found.") { }
+    public WebKitNotFound(string message) : base(message) { }
+}
 
 public class WebKitComponentNotFoundException() : Exception("WebKitComponent not found.");
 

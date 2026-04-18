@@ -8,6 +8,7 @@
         <RootNamespace>Talaryon.WebKit</RootNamespace>
         <AssemblyName>Talaryon.WebKit</AssemblyName>
         <LangVersion>14</LangVersion>
+        <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
         <Title>Talaryon WebKit</Title>
         <Authors>Talaryon Labs</Authors>
         <Copyright>Talaryon Labs</Copyright>
