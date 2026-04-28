@@ -21,6 +21,10 @@ public class WebKitPage : ComponentBase, IDisposable
     
     protected override void OnInitialized()
     {
+        if(WebKit is null) throw new InvalidOperationException("WebKit dependency is not injected");
+        if(WebKitSession is null) throw new InvalidOperationException("WebKitSession dependency is not injected");
+        if(HttpContextAccessor is null) throw new InvalidOperationException("HttpContextAccessor dependency is not injected");
+        
         if(!WebKitSession.Pages.Contains(this))
             WebKitSession.Pages.Add(this);
 

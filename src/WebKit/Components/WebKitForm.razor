@@ -35,6 +35,7 @@
 
     private void Submit(EditContext obj)
     {
+        _hasFailedSending = false;
         OnSubmit.InvokeAsync(new WebKitFormCallbackArgs
         {
             Component = this
@@ -76,6 +77,10 @@
                     </svg>
                     <ValidationSummary/>
                 </div>
+            }
+            @if (SubmitError is not null && _hasFailedSending)
+            {
+                @SubmitError
             }
 
             <button type="submit" class="btn btn-primary">Absenden</button>
