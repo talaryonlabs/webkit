@@ -43,6 +43,12 @@
       <Compile Update="Components\WebKitPriceViewLabels.cs">
         <DependentUpon>WebKitPriceView.razor</DependentUpon>
       </Compile>
+      <Compile Update="Components\WebKitFormCallbackArgs.cs">
+        <DependentUpon>WebKitForm.razor</DependentUpon>
+      </Compile>
+      <Compile Update="Components\IWebKitForm.cs">
+        <DependentUpon>WebKitForm.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
     
     <ItemGroup>

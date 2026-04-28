@@ -128,8 +128,6 @@ public static class WebKitExtensions
                 context.Context.Response.Headers["Cache-Control"] = "public,max-age=3600";
             }
         });
-        
-        app.UseAntiforgery();
 
         // Health checks endpoint
         app.MapHealthChecks("/health");
@@ -143,6 +141,8 @@ public static class WebKitExtensions
             .AddInteractiveWebAssemblyRenderMode()
             .AddAdditionalAssemblies(typeof(WebKitExtensions).Assembly);
 
+        app.UseAntiforgery();
+        
         logger.LogInformation("WebKit middleware pipeline configured");
         
         return app;

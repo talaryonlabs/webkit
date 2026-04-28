@@ -1,0 +1,84 @@
+@typeparam TContext
+@using Talaryon.WebKit.Providers
+@inherits WebKitComponent
+@implements IWebKitForm
+@code {
+    
+    
+    [Parameter, EditorRequired] public TContext ContextModel { get; set; }
+    [Parameter] public EventCallback<WebKitFormCallbackArgs> OnSubmit { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? Form { get; set; }
+    [Parameter] public RenderFragment? SubmitSuccess { get; set; }
+    [Parameter] public RenderFragment? SubmitError { get; set; }
+
+    private bool _hasValidationErrors, _isSuccessfulSent, _hasFailedSending;
+    private EditContext? _editContext;
+
+    protected override void OnComponentInitialized()
+    {
+        if(ContextModel is null) throw new ArgumentNullException(nameof(ContextModel));
+        if(Form is null) throw new ArgumentNullException(nameof(Form));
+        
+        _editContext = new EditContext(ContextModel);
+        _editContext.OnValidationRequested += (_, _) =>
+        {
+            if(!_editContext.GetValidationMessages().Any())
+                _hasValidationErrors = false;
+        };
+        _editContext.OnValidationStateChanged += (_, _) =>
+        {
+            if(!_editContext.GetValidationMessages().Any())
+                _hasValidationErrors = false;
+        };
+        _editContext.SetFieldCssClassProvider(new WebKitFieldClassProvider());
+    }
+
+    private void Submit(EditContext obj)
+    {
+        OnSubmit.InvokeAsync(new WebKitFormCallbackArgs
+        {
+            Component = this
+        });
+    }
+    
+    private void SubmitInvalid(EditContext obj)
+    {
+        _hasValidationErrors = _editContext.GetValidationMessages().Any();
+    }
+
+    public void Success()
+    {
+        _isSuccessfulSent = true;
+    }
+
+    public void Error()
+    {
+        _hasFailedSending = true;
+    }
+}
+
+
+<EditForm EditContext="@_editContext" OnInvalidSubmit="@SubmitInvalid" OnValidSubmit="@Submit">
+    <DataAnnotationsValidator/>
+    <div class="grid grid-flow-row gap-4">
+        @Form
+        @if (SubmitSuccess is not null && _isSuccessfulSent)
+        {
+            @SubmitSuccess
+        }
+        else
+        {
+            @if (_hasValidationErrors)
+            {
+                <div role="alert" class="alert alert-error text-base-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <ValidationSummary/>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary">Absenden</button>
+        }
+    </div>
+</EditForm>

@@ -1,0 +1,14 @@
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; }
+}
+
+<label class="form-control w-full">
+    @if (Title is not null)
+    {
+        <div class="label">
+            <span class="label-text">@Title</span>
+        </div>
+    }
+    @ChildContent
+</label>
