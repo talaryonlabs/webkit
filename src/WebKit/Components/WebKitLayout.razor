@@ -7,7 +7,7 @@
     public Dictionary<string, object>? InputAttributes { get; set; }
 }
 
-<div class="h-dvh flex flex-col transition-all text-base @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
+<div x-data class="h-dvh flex flex-col transition-all text-base @InputAttributes?.GetValueOrDefault("webkit:class", "")" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
     @if (Header is not null)
     {
         <div class="shrink">
