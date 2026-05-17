@@ -4,12 +4,12 @@
 @implements IWebKitForm
 @code {
     
-    
     [Parameter, EditorRequired] public TContext ContextModel { get; set; }
     [Parameter] public EventCallback<WebKitFormCallbackArgs> OnSubmit { get; set; }
     [Parameter, EditorRequired] public RenderFragment? Form { get; set; }
     [Parameter] public RenderFragment? SubmitSuccess { get; set; }
     [Parameter] public RenderFragment? SubmitError { get; set; }
+    [Parameter] public RenderFragment? SubmitAction { get; set; }
 
     private bool _hasValidationErrors, _isSuccessfulSent, _hasFailedSending;
     private EditContext? _editContext;
@@ -83,7 +83,14 @@
                 @SubmitError
             }
 
-            <button type="submit" class="btn btn-primary">Absenden</button>
+            @if (SubmitAction is not null)
+            {
+                @SubmitAction
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary">Absenden</button>    
+            }
         }
     </div>
 </EditForm>
