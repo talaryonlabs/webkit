@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Talaryon.Toolbox.Extensions;
 using Talaryon.WebKit.Services;
 using Talaryon.WebKit.Services.Options;
@@ -67,6 +73,96 @@ public static class WebKitExtensions
         Action<IWebKit>? optionsConfigurator = null,
         string? statusCodePath = null)
     {
+        // Check if OIDC authentication is configured and set up authentication
+        var hasOidc = builder.Services.Any(sd => sd.ServiceType == typeof(IWebKitOidcAuthenticationService));
+        var hasToken = builder.Services.Any(sd => sd.ServiceType == typeof(IWebKitTokenAuthenticationService));
+        
+        if (hasOidc || hasToken)
+        {
+            var oidcOptions = builder.Services.BuildServiceProvider()
+                .GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>()?.Value;
+            
+            if (hasOidc && oidcOptions?.Enabled == true)
+            {
+                // Configure authentication with OIDC and Cookie schemes
+                builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                    options.DefaultSignInScheme = "Cookies";
+                    options.DefaultSignOutScheme = "Cookies";
+                })
+                .AddCookie("Cookies", cookieOptions =>
+                {
+                    cookieOptions.Cookie.Name = oidcOptions.CookieName;
+                    cookieOptions.Cookie.SameSite = oidcOptions.SameSiteMode;
+                    cookieOptions.ExpireTimeSpan = TimeSpan.FromHours(oidcOptions.CookieExpireHours);
+                    cookieOptions.SlidingExpiration = oidcOptions.SlidingExpiration;
+                    cookieOptions.LoginPath = new PathString("/login");
+                    cookieOptions.AccessDeniedPath = new PathString("/login");
+                    cookieOptions.ReturnUrlParameter = "ReturnUrl";
+                })
+                .AddOpenIdConnect("oidc", oidcAuthOptions =>
+                {
+                    oidcAuthOptions.Authority = oidcOptions.Authority;
+                    oidcAuthOptions.ClientId = oidcOptions.ClientId;
+                    oidcAuthOptions.ClientSecret = oidcOptions.ClientSecret;
+                    oidcAuthOptions.ResponseType = oidcOptions.ResponseType;
+                    oidcAuthOptions.CallbackPath = oidcOptions.CallbackPath;
+                    oidcAuthOptions.SignedOutCallbackPath = oidcOptions.SignedOutCallbackPath;
+                    oidcAuthOptions.RemoteSignOutPath = oidcOptions.RemoteSignOutPath;
+                    oidcAuthOptions.SaveTokens = oidcOptions.SaveTokens;
+                    oidcAuthOptions.GetClaimsFromUserInfoEndpoint = oidcOptions.GetClaimsFromUserInfoEndpoint;
+                    oidcAuthOptions.RequireHttpsMetadata = oidcOptions.RequireHttpsMetadata;
+
+                    // Configure scopes
+                    foreach (var scope in oidcOptions.Scopes)
+                    {
+                        oidcAuthOptions.Scope.Add(scope);
+                    }
+
+                    // Claim actions
+                    oidcAuthOptions.ClaimActions.MapJsonKey("sub", "sub");
+                    oidcAuthOptions.ClaimActions.MapJsonKey("name", "name");
+                    oidcAuthOptions.ClaimActions.MapJsonKey("email", "email");
+                    oidcAuthOptions.ClaimActions.MapJsonKey("preferred_username", "preferred_username");
+
+                    // Token validation
+                    oidcAuthOptions.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = oidcOptions.NameClaimType,
+                        ValidateIssuer = true,
+                        ValidIssuer = oidcAuthOptions.Authority,
+                        ValidateAudience = true,
+                        ValidAudience = oidcAuthOptions.ClientId
+                    };
+                });
+                
+                builder.Services.AddAuthorization();
+                builder.Services.AddCascadingAuthenticationState();
+            }
+            else if (hasToken)
+            {
+                // Configure Cookie authentication for Token auth only
+                builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "Cookies";
+                    options.DefaultSignInScheme = "Cookies";
+                    options.DefaultSignOutScheme = "Cookies";
+                })
+                .AddCookie("Cookies", options =>
+                {
+                    options.LoginPath = new PathString("/login");
+                    options.AccessDeniedPath = new PathString("/login");
+                    options.ReturnUrlParameter = "ReturnUrl";
+                });
+                
+                builder.Services.AddAuthorization();
+                builder.Services.AddCascadingAuthenticationState();
+            }
+        }
+        
         var app = builder.Build();
         var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(typeof(WebKitExtensions).FullName!);
@@ -129,6 +225,14 @@ public static class WebKitExtensions
             }
         });
 
+        // Add authentication and authorization middleware if OIDC or Token auth is configured
+        if (app.Services.GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>() != null
+            || app.Services.GetService<IOptions<Services.WebKitTokenAuthenticationService.WebKitTokenAuthenticationOptions>>() != null)
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
+        }
+
         // Health checks endpoint
         app.MapHealthChecks("/health");
         
@@ -140,6 +244,54 @@ public static class WebKitExtensions
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
             .AddAdditionalAssemblies(typeof(WebKitExtensions).Assembly);
+
+        // Conditionally map authentication endpoints if AddWebKitTokenAuthentication or AddWebKitOidcAuthentication was called
+        var hasTokenAuth = app.Services.GetService<IOptions<Services.WebKitTokenAuthenticationService.WebKitTokenAuthenticationOptions>>() != null;
+        var hasOidcAuth = app.Services.GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>() != null;
+        
+        if (hasTokenAuth || hasOidcAuth)
+        {
+            // Token login endpoint (only if token auth is registered)
+            if (hasTokenAuth)
+            {
+                app.MapGet("/webkit/login-token", async (
+                    string token,
+                    string? returnUrl,
+                    Services.IWebKitTokenAuthenticationService tokenAuthService,
+                    HttpContext httpContext) =>
+                {
+                    if (!tokenAuthService.ValidateToken(token))
+                    {
+                        return Results.BadRequest("Invalid token");
+                    }
+
+                    var success = await tokenAuthService.SignInWithTokenAsync(token, returnUrl);
+                    if (!success)
+                    {
+                        return Results.BadRequest("Login failed");
+                    }
+
+                    return Results.Redirect(returnUrl ?? "/");
+                });
+
+                // Also map /login-token as an alias for backward compatibility
+                app.MapGet("/login-token", (string token, string? returnUrl, HttpContext httpContext) =>
+                    Results.Redirect($"/webkit/login-token?token={Uri.EscapeDataString(token)}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}"));
+            }
+
+            // Logout endpoint - works for both Token and OIDC auth (both use cookie scheme "Cookies")
+            app.MapGet("/webkit/logout", async (
+                string? returnUrl,
+                IAuthenticationService authService,
+                HttpContext httpContext) =>
+            {
+                var properties = new AuthenticationProperties { RedirectUri = returnUrl ?? "/login" };
+                await authService.SignOutAsync(httpContext, CookieAuthenticationDefaults.AuthenticationScheme, properties);
+                return Results.Redirect(returnUrl ?? "/login");
+            });
+
+            logger.LogDebug("WebKit authentication endpoints mapped: /webkit/login-token, /webkit/logout");
+        }
 
         app.UseAntiforgery();
         
