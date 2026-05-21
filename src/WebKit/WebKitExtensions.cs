@@ -55,6 +55,7 @@ public static class WebKitExtensions
         services.AddScoped<IWebKitConfig, WebKitConfig>();
         services.AddScoped<IWebKitNavigation, WebKitNavigation>();
         services.AddScoped<IWebKitSession, WebKitSession>();
+        services.AddSingleton<IWebKitRateLimitService, WebKitRateLimitService>();
         
         return services;
     }
@@ -204,8 +205,12 @@ public static class WebKitExtensions
             context.Response.Headers["X-Frame-Options"] = "DENY";
             context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
             context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
+            context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload";
             return next();
         });
+
+        // Add rate limiting middleware (internal - uses WebKit configuration)
+        app.UseRateLimitingInternal();
 
         // Get i18n options before setting up pipeline
         var i18NOptions = webkit.GetOptions<WebKitI18NOptions>();
@@ -221,7 +226,7 @@ public static class WebKitExtensions
         {
             OnPrepareResponse = context =>
             {
-                context.Context.Response.Headers["Cache-Control"] = "public,max-age=3600";
+                context.Context.Response.Headers["Cache-Control"] = "public,max-age=86400";
             }
         });
 
