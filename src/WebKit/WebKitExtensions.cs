@@ -81,7 +81,7 @@ public static class WebKitExtensions
         if (hasOidc || hasToken)
         {
             var oidcOptions = builder.Services.BuildServiceProvider()
-                .GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>()?.Value;
+                .GetService<IOptions<WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>()?.Value;
             
             if (hasOidc && oidcOptions?.Enabled == true)
             {
@@ -231,8 +231,8 @@ public static class WebKitExtensions
         });
 
         // Add authentication and authorization middleware if OIDC or Token auth is configured
-        if (app.Services.GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>() != null
-            || app.Services.GetService<IOptions<Services.WebKitTokenAuthenticationService.WebKitTokenAuthenticationOptions>>() != null)
+        if (app.Services.GetService<IWebKitTokenAuthenticationService>() != null
+            || app.Services.GetService<IWebKitOidcAuthenticationService>() != null)
         {
             app.UseAuthentication();
             app.UseAuthorization();
@@ -251,8 +251,8 @@ public static class WebKitExtensions
             .AddAdditionalAssemblies(typeof(WebKitExtensions).Assembly);
 
         // Conditionally map authentication endpoints if AddWebKitTokenAuthentication or AddWebKitOidcAuthentication was called
-        var hasTokenAuth = app.Services.GetService<IOptions<Services.WebKitTokenAuthenticationService.WebKitTokenAuthenticationOptions>>() != null;
-        var hasOidcAuth = app.Services.GetService<IOptions<Services.WebKitOidcAuthenticationService.WebKitOidcAuthenticationOptions>>() != null;
+        var hasTokenAuth = app.Services.GetService<IWebKitTokenAuthenticationService>() != null;
+        var hasOidcAuth = app.Services.GetService<IWebKitOidcAuthenticationService>() != null;
         
         if (hasTokenAuth || hasOidcAuth)
         {
