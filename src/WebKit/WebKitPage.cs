@@ -18,7 +18,13 @@ public class WebKitPage : ComponentBase, IDisposable
     public string? Image { get; protected set; }
 
     protected virtual void OnPageInitialized() { }
-    
+    protected virtual Task OnPageInitializedAsync() => Task.CompletedTask;
+
+    protected override Task OnInitializedAsync()
+    {
+        return OnPageInitializedAsync();
+    }
+
     protected override void OnInitialized()
     {
         if(WebKit is null) throw new InvalidOperationException("WebKit dependency is not injected");
