@@ -1,50 +1,19 @@
-﻿@code {
+@code {
     [Parameter] public bool IsLoading { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
     
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? InputAttributes { get; set; }
-
-    private readonly string _defaultContainerClass = "@container pt-5 pb-5 px-5 2xl:px-0";
-    private readonly string _defaultContentClass = "max-w-5xl 2xl:max-w-7xl mx-auto";
-
-    private string _containerClasses = "";
-    private string _contentClasses = "";
-
-    private string GetItems(string items1, string items2)
-    {
-        var defaultItems = items1.Split(" ").ToList();
-        var setItems = items2.Split(" ").ToList();
-        var finalItems = new List<string>();
-
-        foreach (var item in setItems)
-        {
-            var name = (item.Contains("-") ? item[..item.IndexOf("-", StringComparison.Ordinal)] : item).Trim();
-            var index = defaultItems.FindIndex(v => v.StartsWith(name, StringComparison.Ordinal));
-            if (index >= 0)
-            {
-                defaultItems.RemoveAt(index);
-            }
-            finalItems.Add(item);
-        }
-        finalItems.AddRange(defaultItems);
-        
-        return string.Join(" ", finalItems);
-    }
-
-    protected override void OnParametersSet()
-    {
-        _containerClasses = GetItems(_defaultContainerClass, (string)(InputAttributes?.GetValueOrDefault("webkit:class", "") ?? string.Empty));
-        _contentClasses = GetItems(_defaultContentClass, (string)(InputAttributes?.GetValueOrDefault("webkit:content:class", "") ?? string.Empty));
-    }
-
 }
-<div class="@_containerClasses" style="@InputAttributes?.GetValueOrDefault("webkit:style", "")">
-    <div class="@_contentClasses" style="@InputAttributes?.GetValueOrDefault("webkit:content:style", "")">
-        @if (ChildContent is not null)
-        {
-            @ChildContent 
-        }
-    </div>
+
+<div class="container mx-auto pt-10 pb-10 px-5 @InputAttributes?.GetValueOrDefault("webkit:class", "")" x-ref="@InputAttributes?.GetValueOrDefault("x-ref", "")">
+    @if (IsLoading)
+    {
+        <WebKitLoader />
+    }
+    else if(ChildContent is not null)
+    {
+        @ChildContent
+    }
 </div>
