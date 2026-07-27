@@ -63,7 +63,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
-      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.19.2" />
+      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.21.0" />
       <PackageReference Include="Talaryon.Toolbox.Services" Version="1.6.0" />
     </ItemGroup>
 
